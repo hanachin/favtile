@@ -9,8 +9,12 @@ favs_url = (id, page = 1, count = 20) ->
   "https://api.twitter.com/1/favorites.json?id=#{encodeURIComponent id}&page=#{page}&count=#{count}&include_entities=true&suppress_response_codes=true&callback=?"
 
 twapi = (url, callback) ->
+  # for debug
+  return callback JSON.parse localStorage[url] if localStorage[url]
+
   $.getJSON url, (json) ->
     console.log json
+    localStorage[url] = JSON.stringify json
     throw "error: #{url}" if json.errors?
     callback json
 

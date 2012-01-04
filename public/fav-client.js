@@ -17,8 +17,10 @@
   };
 
   twapi = function(url, callback) {
+    if (localStorage[url]) return callback(JSON.parse(localStorage[url]));
     return $.getJSON(url, function(json) {
       console.log(json);
+      localStorage[url] = JSON.stringify(json);
       if (json.errors != null) throw "error: " + url;
       return callback(json);
     });
