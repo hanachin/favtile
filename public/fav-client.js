@@ -1,5 +1,5 @@
 (function() {
-  var $, Fav, Favs, FavtileApp, User, favs_url, lookup_url, set_background, twapi;
+  var $, Fav, Favs, FavtileApp, User, favs_url, lookup_url, twapi;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   $ = jQuery;
@@ -96,11 +96,28 @@
     };
 
     function FavtileApp() {
-      this.addOne = __bind(this.addOne, this);      FavtileApp.__super__.constructor.apply(this, arguments);
+      this.set_background = __bind(this.set_background, this);
+      this.moreFavs = __bind(this.moreFavs, this);
+      this.addOne = __bind(this.addOne, this);
+      var _ref;
+      FavtileApp.__super__.constructor.apply(this, arguments);
       console.log("constructor of FavtileApp");
       Fav.bind("create", this.addOne);
       Fav.fetch();
       User.fetch();
+      this.screen_name = (_ref = /^\/(.*)/.exec(location.pathname)) != null ? _ref.pop() : void 0;
+      this.set_background();
+      $(window).bottom();
+      $(window).bind("bottom", this.moreFavs);
+      twapi(favs_url(this.screen_name), function(favs) {
+        var fav, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = favs.length; _i < _len; _i++) {
+          fav = favs[_i];
+          _results.push(Fav.create(fav));
+        }
+        return _results;
+      });
     }
 
     FavtileApp.prototype.addOne = function(fav) {
@@ -111,67 +128,56 @@
       return this.items.append(view.render().el);
     };
 
-    return FavtileApp;
-
-  })();
-
-  set_background = function(user) {
-    return $('body').css({
-      'background-image': "url(" + user.profile_background_image_url_https + ")",
-      'background-repeat': user.profile_background_tile ? "repeat" : "no-repeat",
-      'background-color': "#" + user.profile_background_color,
-      'background-attachment': "fixed"
-    });
-  };
-
-  $(function() {
-    var loading, page, screen_name, user, _ref;
-    new FavtileApp({
-      el: $("#favs")
-    });
-    screen_name = (_ref = /^\/(.*)/.exec(location.pathname)) != null ? _ref.pop() : void 0;
-    if (!screen_name) return;
-    page = 1;
-    loading = false;
-    $(window).bottom();
-    $(window).bind("bottom", function() {
-      if (!loading) {
+    FavtileApp.prototype.moreFavs = function() {
+      var _ref, _ref2;
+      var _this = this;
+      console.log("favs");
+      if ((_ref = this.page) == null) this.page = 1;
+      if ((_ref2 = this.loading) == null) this.loading = false;
+      if (!this.loading) {
         console.log("bottom");
-        loading = true;
-        return twapi(favs_url(screen_name, ++page), function(favs) {
+        this.loading = true;
+        return twapi(favs_url(this.screen_name, ++this.page), function(favs) {
           var fav, _i, _len;
           for (_i = 0, _len = favs.length; _i < _len; _i++) {
             fav = favs[_i];
             Fav.create(fav);
           }
-          return loading = false;
+          return _this.loading = false;
         });
       }
-    });
-    user = User.cache(screen_name);
-    if (user) {
-      set_background(user);
-    } else {
-      twapi(lookup_url(screen_name), function(users) {
-        var user, _i, _len, _results;
-        set_background(users[0]);
-        _results = [];
-        for (_i = 0, _len = users.length; _i < _len; _i++) {
-          user = users[_i];
+    };
+
+    FavtileApp.prototype.set_background = function() {
+      var set_bg, user;
+      set_bg = function(user) {
+        return $('body').css({
+          'background-image': "url(" + user.profile_background_image_url_https + ")",
+          'background-repeat': user.profile_background_tile ? "repeat" : "no-repeat",
+          'background-color': "#" + user.profile_background_color,
+          'background-attachment': "fixed"
+        });
+      };
+      user = User.cache(this.screen_name);
+      if (user) {
+        return set_bg(user);
+      } else {
+        return twapi(lookup_url(this.screen_name), function(users) {
+          user = users[0];
+          set_bg(user);
           user.saved_at = (new Date).getTime();
-          _results.push((User.create(user)).save());
-        }
-        return _results;
-      });
-    }
-    return twapi(favs_url(screen_name), function(favs) {
-      var fav, _i, _len, _results;
-      _results = [];
-      for (_i = 0, _len = favs.length; _i < _len; _i++) {
-        fav = favs[_i];
-        _results.push(Fav.create(fav));
+          return (User.create(user)).save();
+        });
       }
-      return _results;
+    };
+
+    return FavtileApp;
+
+  })();
+
+  $(function() {
+    return new FavtileApp({
+      el: $("#favs")
     });
   });
 

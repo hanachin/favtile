@@ -8,6 +8,7 @@ require("zappa") ->
     section id: "favs", ->
       input type: 'text'
       div class: 'items'
+      footer
 
   @view layout: ->
     doctype 5

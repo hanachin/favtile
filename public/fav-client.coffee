@@ -25,10 +25,7 @@ class User extends Spine.Model
   @extend Spine.Model.Local
   @cache: (screen_name) ->
     user = @findByAttribute("screen_name", screen_name)
-    if ((new Date).getTime() - User.CACHE_TIME) < user?.saved_at
-      user
-    else
-      null
+    if ((new Date).getTime() - User.CACHE_TIME) < user?.saved_at then user else null
 
 class Fav extends Spine.Model
   @configure "Fav", "user", "text", "entities"
@@ -53,44 +50,50 @@ class FavtileApp extends Spine.Controller
     Fav.fetch()
     User.fetch()
 
+    @screen_name = /^\/(.*)/.exec(location.pathname)?.pop()
+
+    @set_background()
+
+    # load next favs when detect scroll to bottom
+    $(window).bottom()
+    $(window).bind "bottom", @moreFavs
+
+    # recent 20 favs
+    twapi (favs_url @screen_name), (favs) ->
+      Fav.create fav for fav in favs
+
   addOne: (fav) =>
     view = new Favs(item: fav)
     @items.append(view.render().el)
 
-set_background = (user) ->
-  $('body').css
-    'background-image': "url(#{user.profile_background_image_url_https})"
-    'background-repeat': if user.profile_background_tile then "repeat" else "no-repeat"
-    'background-color': "##{user.profile_background_color}"
-    'background-attachment': "fixed"
-
-$ ->
-  new FavtileApp(el: $("#favs"))
-
-  screen_name = /^\/(.*)/.exec(location.pathname)?.pop()
-  return unless screen_name
-
-  page = 1
-  loading = false
-  $(window).bottom()
-  $(window).bind "bottom", ->
-    unless loading
+  moreFavs: =>
+    console.log "favs"
+    @page ?= 1
+    @loading ?= false
+    unless @loading
       console.log "bottom"
-      loading = true
-      twapi (favs_url screen_name, ++page), (favs) ->
+      @loading = true
+      twapi (favs_url @screen_name, ++@page), (favs) =>
         Fav.create fav for fav in favs
-        loading = false
+        @loading = false
 
-  # setting the background
-  user = User.cache(screen_name)
-  if user
-    set_background user
-  else
-    twapi (lookup_url screen_name), (users) ->
-      set_background users[0]
-      for user in users
+  set_background: =>
+    set_bg = (user) ->
+      $('body').css
+        'background-image': "url(#{user.profile_background_image_url_https})"
+        'background-repeat': if user.profile_background_tile then "repeat" else "no-repeat"
+        'background-color': "##{user.profile_background_color}"
+        'background-attachment': "fixed"
+
+    user = User.cache @screen_name
+    if user
+      set_bg user
+    else
+      twapi (lookup_url @screen_name), (users) ->
+        user = users[0]
+        set_bg user
         user.saved_at = (new Date).getTime()
         (User.create user).save()
 
-  twapi (favs_url screen_name), (favs) ->
-    Fav.create fav for fav in favs
+$ ->
+  new FavtileApp(el: $("#favs"))
