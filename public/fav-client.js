@@ -134,19 +134,20 @@
     page = 1;
     loading = false;
     $(window).bottom();
-    $(window).bind("bottom", function() {});
-    if (!loading) {
-      console.log("bottom");
-      loading = true;
-      twapi(favs_url(screen_name, ++page), function(favs) {
-        var fav, _i, _len;
-        for (_i = 0, _len = favs.length; _i < _len; _i++) {
-          fav = favs[_i];
-          Fav.create(fav);
-        }
-        return loading = false;
-      });
-    }
+    $(window).bind("bottom", function() {
+      if (!loading) {
+        console.log("bottom");
+        loading = true;
+        return twapi(favs_url(screen_name, ++page), function(favs) {
+          var fav, _i, _len;
+          for (_i = 0, _len = favs.length; _i < _len; _i++) {
+            fav = favs[_i];
+            Fav.create(fav);
+          }
+          return loading = false;
+        });
+      }
+    });
     user = User.cache(screen_name);
     if (user) {
       set_background(user);
