@@ -95,12 +95,28 @@
   };
 
   $(function() {
-    var screen_name, _ref;
+    var loading, page, screen_name, _ref;
     new FavtileApp({
       el: $("#favs")
     });
     screen_name = (_ref = /^\/(.*)/.exec(location.pathname)) != null ? _ref.pop() : void 0;
     if (!screen_name) return;
+    page = 1;
+    loading = false;
+    $(window).bottom();
+    $(window).bind("bottom", function() {});
+    if (!loading) {
+      console.log("bottom");
+      loading = true;
+      twapi(favs_url(screen_name, ++page), function(favs) {
+        var fav, _i, _len;
+        for (_i = 0, _len = favs.length; _i < _len; _i++) {
+          fav = favs[_i];
+          Fav.create(fav);
+        }
+        return loading = false;
+      });
+    }
     twapi(lookup_url(screen_name), function(users) {
       return set_background(users[0]);
     });

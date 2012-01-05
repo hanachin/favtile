@@ -57,6 +57,17 @@ $ ->
   screen_name = /^\/(.*)/.exec(location.pathname)?.pop()
   return unless screen_name
 
+  page = 1
+  loading = false
+  $(window).bottom()
+  $(window).bind "bottom", ->
+  unless loading
+    console.log "bottom"
+    loading = true
+    twapi (favs_url screen_name, ++page), (favs) ->
+      Fav.create fav for fav in favs
+      loading = false
+
   # setting the background
   twapi (lookup_url screen_name), (users) ->
     set_background users[0]

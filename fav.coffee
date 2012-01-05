@@ -16,6 +16,7 @@ require("zappa") ->
         title "favtile"
         script src: 'jquery-1.7.1.min.js', charset: 'utf-8'
         script src: 'jquery.tmpl.min.js', charset: 'utf-8'
+        script src: 'jquery.bottom-1.0.js', charset: 'utf-8'
         script src: 'spine.js', charset: 'utf-8'
         script src: 'fav-client.js', charset: 'utf-8'
         script id: 'favTemplate', type: 'x-jquery-tmpl', ->
