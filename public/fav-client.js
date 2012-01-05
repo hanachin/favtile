@@ -191,11 +191,13 @@
         this.loading = true;
         return twapi(favs_url(this.screen_name, ++this.page), function(favs) {
           var fav, _i, _len;
-          for (_i = 0, _len = favs.length; _i < _len; _i++) {
-            fav = favs[_i];
-            Fav.create(fav);
+          if (favs.length !== 0) {
+            for (_i = 0, _len = favs.length; _i < _len; _i++) {
+              fav = favs[_i];
+              Fav.create(fav);
+            }
+            return _this.loading = false;
           }
-          return _this.loading = false;
         });
       }
     };

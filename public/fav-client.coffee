@@ -91,8 +91,9 @@ class FavtileApp extends Spine.Controller
       console.log "bottom"
       @loading = true
       twapi (favs_url @screen_name, ++@page), (favs) =>
-        Fav.create fav for fav in favs
-        @loading = false
+        if favs.length isnt 0
+          Fav.create fav for fav in favs
+          @loading = false
 
   set_background: =>
     set_bg = (user) ->
