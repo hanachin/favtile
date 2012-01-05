@@ -52,15 +52,16 @@ class FavtileApp extends Spine.Controller
 
     @screen_name = /^\/(.*)/.exec(location.pathname)?.pop()
 
-    @set_background()
+    if @screen_name
+      @set_background()
 
-    # load next favs when detect scroll to bottom
-    $(window).bottom()
-    $(window).bind "bottom", @moreFavs
+      # load next favs when detect scroll to bottom
+      $(window).bottom()
+      $(window).bind "bottom", @moreFavs
 
-    # recent 20 favs
-    twapi (favs_url @screen_name), (favs) ->
-      Fav.create fav for fav in favs
+      # recent 20 favs
+      twapi (favs_url @screen_name), (favs) ->
+        Fav.create fav for fav in favs
 
   addOne: (fav) =>
     view = new Favs(item: fav)

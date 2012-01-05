@@ -106,18 +106,20 @@
       Fav.fetch();
       User.fetch();
       this.screen_name = (_ref = /^\/(.*)/.exec(location.pathname)) != null ? _ref.pop() : void 0;
-      this.set_background();
-      $(window).bottom();
-      $(window).bind("bottom", this.moreFavs);
-      twapi(favs_url(this.screen_name), function(favs) {
-        var fav, _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = favs.length; _i < _len; _i++) {
-          fav = favs[_i];
-          _results.push(Fav.create(fav));
-        }
-        return _results;
-      });
+      if (this.screen_name) {
+        this.set_background();
+        $(window).bottom();
+        $(window).bind("bottom", this.moreFavs);
+        twapi(favs_url(this.screen_name), function(favs) {
+          var fav, _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = favs.length; _i < _len; _i++) {
+            fav = favs[_i];
+            _results.push(Fav.create(fav));
+          }
+          return _results;
+        });
+      }
     }
 
     FavtileApp.prototype.addOne = function(fav) {
