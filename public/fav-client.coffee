@@ -37,6 +37,22 @@ class Favs extends Spine.Controller
 
   render: =>
     @replace($("#favTemplate").tmpl(@item))
+
+    v.type = t for v in values for own t, values of @item.entities
+    entities = (v for own t, v of @item.entities).reduce((a, b) -> a.concat b).sort (a, b) -> a.indices[0] - b.indices[0]
+
+    el = $("<p>")
+    pos = 0
+    for e in entities
+      el.append @item.text.substr(pos, e.indices[0] - pos)
+      pos = e.indices[1]
+      sub = @item.text.substr(e.indices[0], e.indices[1] - e.indices[0])
+      el.append switch e.type
+          when "urls" then $("<a>").attr(target: "_blank", href: e.expanded_url).text e.expanded_url
+          when "user_mentions" then $("<a>").attr(href: "/#{encodeURIComponent e.screen_name}").text sub
+          when "hashtags" then sub
+    el.append @item.text.substr(pos)
+    $(@el).append el
     @
 
 class FavtileApp extends Spine.Controller

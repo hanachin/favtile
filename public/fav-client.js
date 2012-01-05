@@ -79,7 +79,57 @@
     }
 
     Favs.prototype.render = function() {
+      var e, el, entities, pos, sub, t, v, values, _i, _j, _len, _len2, _ref;
       this.replace($("#favTemplate").tmpl(this.item));
+      _ref = this.item.entities;
+      for (t in _ref) {
+        if (!__hasProp.call(_ref, t)) continue;
+        values = _ref[t];
+        for (_i = 0, _len = values.length; _i < _len; _i++) {
+          v = values[_i];
+          v.type = t;
+        }
+      }
+      entities = ((function() {
+        var _ref2, _results;
+        _ref2 = this.item.entities;
+        _results = [];
+        for (t in _ref2) {
+          if (!__hasProp.call(_ref2, t)) continue;
+          v = _ref2[t];
+          _results.push(v);
+        }
+        return _results;
+      }).call(this)).reduce(function(a, b) {
+        return a.concat(b);
+      }).sort(function(a, b) {
+        return a.indices[0] - b.indices[0];
+      });
+      el = $("<p>");
+      pos = 0;
+      for (_j = 0, _len2 = entities.length; _j < _len2; _j++) {
+        e = entities[_j];
+        el.append(this.item.text.substr(pos, e.indices[0] - pos));
+        pos = e.indices[1];
+        sub = this.item.text.substr(e.indices[0], e.indices[1] - e.indices[0]);
+        el.append((function() {
+          switch (e.type) {
+            case "urls":
+              return $("<a>").attr({
+                target: "_blank",
+                href: e.expanded_url
+              }).text(e.expanded_url);
+            case "user_mentions":
+              return $("<a>").attr({
+                href: "/" + (encodeURIComponent(e.screen_name))
+              }).text(sub);
+            case "hashtags":
+              return sub;
+          }
+        })());
+      }
+      el.append(this.item.text.substr(pos));
+      $(this.el).append(el);
       return this;
     };
 

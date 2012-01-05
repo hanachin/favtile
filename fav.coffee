@@ -24,7 +24,6 @@ require("zappa") ->
         script id: 'favTemplate', type: 'x-jquery-tmpl', ->
           div ->
             h3 "${user.screen_name}"
-            p "${text}"
       body ->
         header ->
           h1 "favtile"
