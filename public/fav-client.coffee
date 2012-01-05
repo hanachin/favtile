@@ -18,6 +18,17 @@ twapi = (url, callback) ->
     throw "error: #{url}" if json.errors?
     callback json
 
+class User extends Spine.Model
+  @CACHE_TIME: 24 * 60 * 60 * 1000
+  @configure "User", "screen_name", "profile_background_image_url_https", "profile_background_tile", "profile_background_color", "saved_at"
+  @extend Spine.Model.Local
+  @cache: (screen_name) ->
+    user = @findByAttribute("screen_name", screen_name)
+    if ((new Date).getTime() - User.CACHE_TIME) < user?.saved_at
+      user
+    else
+      null
+
 class Fav extends Spine.Model
   @configure "Fav", "user", "text", "entities"
 
@@ -39,6 +50,7 @@ class FavtileApp extends Spine.Controller
     console.log "constructor of FavtileApp"
     Fav.bind("create", @addOne)
     Fav.fetch()
+    User.fetch()
 
   addOne: (fav) =>
     view = new Favs(item: fav)
@@ -46,9 +58,9 @@ class FavtileApp extends Spine.Controller
 
 set_background = (user) ->
   $('body').css
-    'background-image': "url(#{user['profile_background_image_url_https']})"
-    'background-repeat': if user["profile_background_tile"] then "repeat" else "no-repeat"
-    'background-color': "##{user['profile_background_color']}"
+    'background-image': "url(#{user.profile_background_image_url_https})"
+    'background-repeat': if user.profile_background_tile then "repeat" else "no-repeat"
+    'background-color': "##{user.profile_background_color}"
     'background-attachment': "fixed"
 
 $ ->
@@ -69,8 +81,15 @@ $ ->
       loading = false
 
   # setting the background
-  twapi (lookup_url screen_name), (users) ->
-    set_background users[0]
+  user = User.cache(screen_name)
+  if user
+    set_background user
+  else
+    twapi (lookup_url screen_name), (users) ->
+      set_background users[0]
+      for user in users
+        user.saved_at = (new Date).getTime()
+        (User.create user).save()
 
   twapi (favs_url screen_name), (favs) ->
     Fav.create fav for fav in favs
