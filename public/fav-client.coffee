@@ -10,6 +10,7 @@ favs_url = (id, page = 1, count = 20) ->
 
 twapi = (url, callback) ->
   # for debug
+  console.log JSON.parse localStorage[url] if localStorage[url]
   return callback JSON.parse localStorage[url] if localStorage[url]
 
   $.getJSON url, (json) ->

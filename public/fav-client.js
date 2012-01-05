@@ -17,6 +17,7 @@
   };
 
   twapi = function(url, callback) {
+    if (localStorage[url]) console.log(JSON.parse(localStorage[url]));
     if (localStorage[url]) return callback(JSON.parse(localStorage[url]));
     return $.getJSON(url, function(json) {
       console.log(json);
