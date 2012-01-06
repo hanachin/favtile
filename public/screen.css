@@ -1,0 +1,41 @@
+/* http://kojika17.com/2011/04/floatclearfix.php */
+.clearfix {zoom:1;}
+.clearfix:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.item {
+    margin: 10px;
+    padding: 15px 20px;
+    word-wrap: break-word;
+    width: 220px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px #000;
+    opacity: 0.9;
+}
+
+.item img.icon {
+    margin-right: 10px;
+    margin-bottom: 1px;
+    width: 48px;
+    height: 48px;
+    float: left;
+}
+
+.item img.media {
+    /* width: 150px; */
+    /* height:150px; */
+}
+
+.item p {
+    margin: 0px;
+    padding: 0px;
+}
+
+.item footer {
+    text-align: right;
+    font-size: x-small;
+}

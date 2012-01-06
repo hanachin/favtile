@@ -8,6 +8,15 @@ favs_url = (id, page = 1, count = 20) ->
   throw "twitter id is missing." unless id
   "https://api.twitter.com/1/favorites.json?id=#{encodeURIComponent id}&page=#{page}&count=#{count}&include_entities=true&suppress_response_codes=true&callback=?"
 
+search_url = (q, page = 1, rpp = 100) ->
+  throw "search query is missing." unless q
+  "http://search.twitter.com/search.json?q=#{encodeURIComponent q}&rpp=#{rpp}&result_type=mixed&include_entities=true&suppress_response_codes=true&callback=?"
+
+dateformat = (d) ->
+  date = [d.getFullYear(), d.getMonth() + 1, d.getDate()].join "-"
+  time = [d.getHours(), d.getMinutes(), d.getSeconds()].join ":"
+  "#{date} #{time}"
+
 twapi = (url, callback) ->
   # for debug
   console.log JSON.parse localStorage[url] if localStorage[url]
@@ -27,35 +36,59 @@ class User extends Spine.Model
     user = @findByAttribute("screen_name", screen_name)
     if ((new Date).getTime() - User.CACHE_TIME) < user?.saved_at then user else null
 
-class Fav extends Spine.Model
-  @configure "Fav", "user", "text", "entities"
-
-class Favs extends Spine.Controller
+class Tweets extends Spine.Controller
   constructor: ->
     super
     @item.bind("update", @render)
+    @item.bind("destroy", @release)
 
-  render: =>
-    @replace($("#favTemplate").tmpl(@item))
-
-    v.type = t for v in values for own t, values of @item.entities
-    entities = (v for own t, v of @item.entities).reduce((a, b) -> a.concat b).sort (a, b) -> a.indices[0] - b.indices[0]
+  decorate: (item) ->
+    {text: text, entities: entities} = item
+    v.type = t for v in values for own t, values of entities
+    entities = (v for own t, v of entities).reduce((a, b) -> a.concat b).sort (a, b) -> a.indices[0] - b.indices[0]
 
     el = $("<p>")
     pos = 0
     for e in entities
-      el.append @item.text.substr(pos, e.indices[0] - pos)
+      el.append text.substr(pos, e.indices[0] - pos)
       pos = e.indices[1]
-      sub = @item.text.substr(e.indices[0], e.indices[1] - e.indices[0])
+      sub = text.substr(e.indices[0], e.indices[1] - e.indices[0])
       el.append switch e.type
-          when "urls" then $("<a>").attr(target: "_blank", href: e.expanded_url).text e.expanded_url
-          when "user_mentions" then $("<a>").attr(href: "/#{encodeURIComponent e.screen_name}").text sub
-          when "hashtags" then sub
-    el.append @item.text.substr(pos)
-    $(@el).append el
+        when "urls" then $("<a>").attr(class: "urls", target: "_blank", href: e.expanded_url).text e.display_url
+        when "user_mentions" then $("<a>").attr(class: "user_mentions", href: "/#{encodeURIComponent e.screen_name}").text sub
+        when "hashtags" then $("<a>").attr(class: "hashtags", href: "/##{encodeURIComponent e.text}").text sub
+        when "media" then $("<a>").attr(class: "media", target: "_blank", href: e.expanded_url).text e.display_url
+        else
+          console.log "unknown entity type", e
+          sub
+    el.append text.substr(pos)
+
+    media = (e for e in entities when e.type is "media")
+    for m in media
+      sizes = width: m.sizes.thumb.w, height: m.sizes.thumb.h
+      el.append $("<img>").attr(class: "media", src: "#{m.media_url}:thumb").css(sizes)
+    el
+
+  render: =>
+    @replace($("#tweetTemplate").tmpl(@item))
+    $(@el).find("div").prepend @decorate @item
     @
 
+class Tweet extends Spine.Model
+  dateformat: => dateformat new Date @created_at
+
+class Search extends Tweet
+  @configure "Search", "from_user", "text", "entities", "id_str", "created_at", "profile_image_url"
+
+class Fav extends Tweet
+  @configure "Fav", "user", "text", "entities", "id_str", "created_at"
+
+# class Searches extends Tweets
+# class Favs extends Tweets
+
 class FavtileApp extends Spine.Controller
+  events:
+    "click .hashtags": "searchReload"
   elements:
     ".items": "items"
 
@@ -64,7 +97,10 @@ class FavtileApp extends Spine.Controller
     console.log "constructor of FavtileApp"
     Fav.bind("create", @addOne)
     Fav.fetch()
+    Search.bind("create", @addSearchOne)
+    Search.fetch()
     User.fetch()
+    $(@items).masonry(itemSelector: ".item")
 
     @screen_name = /^\/(.*)/.exec(location.pathname)?.pop()
 
@@ -79,9 +115,30 @@ class FavtileApp extends Spine.Controller
       twapi (favs_url @screen_name), (favs) ->
         Fav.create fav for fav in favs
 
+    if location.hash
+      twapi (search_url location.hash), (result) ->
+        console.log result.results
+        Search.create t for t in result.results
+
+  searchReload: (e) ->
+    Search.destroyAll()
+    twapi (search_url e.target.text), (result) ->
+      console.log result.results
+      Search.create t for t in result.results
+
+  addSearchOne: (search) =>
+    view = new Tweets(item: search)
+    el = view.render().el
+    @items.append(el)
+    $(@items).masonry("appended", el).masonry('reload')
+
   addOne: (fav) =>
-    view = new Favs(item: fav)
-    @items.append(view.render().el)
+    view = new Tweets(item: fav)
+    el = view.render().el
+    @items.append(el)
+    # adjust height
+    # $(el).height (Math.floor($(el).height() / $(el).width()) + 1) * $(el).width() - 16
+    $(@items).masonry("appended", el).masonry('reload')
 
   moreFavs: =>
     console.log "favs"
