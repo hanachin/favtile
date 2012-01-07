@@ -19,8 +19,8 @@ dateformat = (d) ->
 
 twapi = (url, callback) ->
   # for debug
-  # console.log JSON.parse localStorage[url] if localStorage[url]
-  # return callback JSON.parse localStorage[url] if localStorage[url]
+  console.log JSON.parse localStorage[url] if localStorage[url]
+  return callback JSON.parse localStorage[url] if localStorage[url]
 
   $.getJSON url, (json) ->
     console.log json
