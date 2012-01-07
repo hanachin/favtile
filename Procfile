@@ -1,1 +1,1 @@
-web: node fav.js
+web: coffee fav.coffee
