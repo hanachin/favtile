@@ -51,7 +51,7 @@
 
     User.CACHE_TIME = 24 * 60 * 60 * 1000;
 
-    User.configure("User", "screen_name", "profile_background_image_url_https", "profile_background_tile", "profile_background_color", "saved_at");
+    User.configure("User", "screen_name", "profile_image_url", "profile_background_image_url_https", "profile_background_tile", "profile_background_color", "saved_at");
 
     User.extend(Spine.Model.Local);
 
@@ -99,9 +99,9 @@
           _results.push(v);
         }
         return _results;
-      })()).reduce(function(a, b) {
+      })()).reduce((function(a, b) {
         return a.concat(b);
-      }).sort(function(a, b) {
+      }), []).sort(function(a, b) {
         return a.indices[0] - b.indices[0];
       });
       el = $("<p>");
@@ -225,19 +225,28 @@
     __extends(FavtileApp, Spine.Controller);
 
     FavtileApp.prototype.events = {
-      "click .hashtags": "searchReload"
+      "submit form": "userChange",
+      "focus .screen_name_input": "active",
+      "blur .screen_name_input": "inactive"
     };
 
     FavtileApp.prototype.elements = {
-      ".items": "items"
+      ".items": "items",
+      ".screen_name_input": "screen_name_input",
+      ".loading": "loading_img"
     };
 
     function FavtileApp() {
-      this.set_background = __bind(this.set_background, this);
+      this.setUserInformation = __bind(this.setUserInformation, this);
+      this.setSearchInformation = __bind(this.setSearchInformation, this);
       this.moreFavs = __bind(this.moreFavs, this);
       this.addOne = __bind(this.addOne, this);
       this.addSearchOne = __bind(this.addSearchOne, this);
+      this.userChange = __bind(this.userChange, this);
+      this.inactive = __bind(this.inactive, this);
+      this.active = __bind(this.active, this);
       var _ref;
+      var _this = this;
       FavtileApp.__super__.constructor.apply(this, arguments);
       console.log("constructor of FavtileApp");
       Fav.bind("create", this.addOne);
@@ -250,21 +259,52 @@
       });
       this.screen_name = (_ref = /^\/(.*)/.exec(location.pathname)) != null ? _ref.pop() : void 0;
       if (this.screen_name) {
-        this.set_background();
+        this.setUserInformation();
         $(window).bottom();
         $(window).bind("bottom", this.moreFavs);
         twapi(favs_url(this.screen_name), function(favs) {
-          var fav, _i, _len, _results;
-          _results = [];
+          var fav, _i, _len;
           for (_i = 0, _len = favs.length; _i < _len; _i++) {
             fav = favs[_i];
-            _results.push(Fav.create(fav));
+            Fav.create(fav);
           }
-          return _results;
+          if (favs.length === 0) {
+            return $(_this.el).find(".loading_footer").text("end of favotes.");
+          }
         });
-      }
-      if (location.hash) {
+      } else if (location.hash) {
+        $(this.screen_name_input).val(decodeURIComponent(location.hash));
         twapi(search_url(location.hash), function(result) {
+          var t, _i, _len, _ref2;
+          console.log(result.results);
+          _ref2 = result.results;
+          for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+            t = _ref2[_i];
+            Search.create(t);
+          }
+          if (result.results.length === 0) {
+            return $(_this.el).find(".loading_footer").text("end of favotes.");
+          }
+        });
+        $("header").append($("<a>").attr({
+          href: "/"
+        }).append($("<img>").attr({
+          "class": "icon",
+          src: "favicon73x73.png"
+        })));
+      } else {
+        $("header").append($("<a>").attr({
+          href: "/"
+        }).append($("<img>").attr({
+          "class": "icon",
+          src: "favicon73x73.png"
+        })));
+      }
+      $(window).bind('hashchange', function() {
+        console.log("hash change");
+        Search.destroyAll();
+        $(_this.screen_name_input).val(decodeURIComponent(location.hash));
+        return twapi(search_url(location.hash), function(result) {
           var t, _i, _len, _ref2, _results;
           console.log(result.results);
           _ref2 = result.results;
@@ -275,22 +315,26 @@
           }
           return _results;
         });
-      }
+      });
+      this.before_data = this.screen_name;
+      this.before_data || (this.before_data = location.hash);
     }
 
-    FavtileApp.prototype.searchReload = function(e) {
-      Search.destroyAll();
-      return twapi(search_url(e.target.text), function(result) {
-        var t, _i, _len, _ref, _results;
-        console.log(result.results);
-        _ref = result.results;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          t = _ref[_i];
-          _results.push(Search.create(t));
-        }
-        return _results;
-      });
+    FavtileApp.prototype.active = function() {
+      return this.screen_name_input.addClass("active");
+    };
+
+    FavtileApp.prototype.inactive = function() {
+      return this.screen_name_input.removeClass("active");
+    };
+
+    FavtileApp.prototype.userChange = function(e) {
+      e.preventDefault();
+      console.log($(this.screen_name_input).val());
+      console.log(this.before_data);
+      if ($(this.screen_name_input).val() !== this.before_data) {
+        return location.href = "/" + ($(this.screen_name_input).val());
+      }
     };
 
     FavtileApp.prototype.addSearchOne = function(search) {
@@ -322,36 +366,57 @@
       if (!this.loading) {
         console.log("bottom");
         this.loading = true;
+        $(this.loading_img).toggle();
         return twapi(favs_url(this.screen_name, ++this.page), function(favs) {
           var fav, _i, _len;
+          console.log("load");
+          $(_this.loading_img).toggle();
           if (favs.length !== 0) {
             for (_i = 0, _len = favs.length; _i < _len; _i++) {
               fav = favs[_i];
               Fav.create(fav);
             }
             return _this.loading = false;
+          } else {
+            return console.log(_this.el.find(".loading_footer").text("end of favotes."));
           }
         });
       }
     };
 
-    FavtileApp.prototype.set_background = function() {
-      var set_bg, user;
+    FavtileApp.prototype.setSearchInformation = function() {
+      return $(this.screen_name_input).val(decodeURIComponent(location.hash));
+    };
+
+    FavtileApp.prototype.setUserInformation = function() {
+      var set_bg, set_icon, user;
+      var _this = this;
       set_bg = function(user) {
-        return $('body').css({
+        return $("body").css({
           'background-image': "url(" + user.profile_background_image_url_https + ")",
           'background-repeat': user.profile_background_tile ? "repeat" : "no-repeat",
           'background-color': "#" + user.profile_background_color,
-          'background-attachment': "fixed"
+          'background-attachment': "fixed",
+          'background-position': "0px 92px"
         });
       };
+      set_icon = function(user) {
+        return $("header").append($("<img>").attr({
+          "class": "icon",
+          src: user.profile_image_url
+        }));
+      };
+      $(this.screen_name_input).val(this.screen_name);
+      $(".username").text("@" + this.screen_name + "'s favtile");
       user = User.cache(this.screen_name);
       if (user) {
-        return set_bg(user);
+        set_bg(user);
+        return set_icon(user);
       } else {
         return twapi(lookup_url(this.screen_name), function(users) {
           user = users[0];
           set_bg(user);
+          set_icon(user);
           user.saved_at = (new Date).getTime();
           return (User.create(user)).save();
         });

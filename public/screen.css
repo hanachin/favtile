@@ -6,17 +6,67 @@
     clear: both;
 }
 
+body {
+    margin: 0px;
+    padding: 0px;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-image: url('top_background.png');
+}
+
+header {
+    position: fixed;
+    top: 0px;
+    margin: 0px;
+    height: 92px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    z-index: 100;
+}
+
+#favs {
+    margin: 92px 0px 0px 0px;
+}
+
+#favs footer {
+    padding: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+.loading {
+    display: none;
+}
+
+header h1 {
+    position: fixed;
+    left: 93px;
+    top: 40px;
+    font-size: 30px;
+    margin: 0px;
+}
+
+header img.icon {
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    width: 73px;
+    height: 73px;
+    border-radius: 10px;
+}
+
 .item {
     margin: 10px;
     padding: 15px 20px;
     word-wrap: break-word;
     width: 220px;
-    background: white;
+    background: rgba(255, 255, 255, 0.85);
     border-radius: 10px;
     box-shadow: 0px 0px 10px #000;
-    opacity: 0.9;
 }
-
 .item img.icon {
     margin-right: 10px;
     margin-bottom: 1px;
@@ -38,4 +88,43 @@
 .item footer {
     text-align: right;
     font-size: x-small;
+}
+
+
+.screen_name_input {
+    position: fixed;
+    right: 120px;
+    top: 35px;
+    width: 170px;
+    border-radius: 15px;
+    font-size: 24px;
+    color: #999;
+}
+
+.active {
+    color: black;
+}
+
+.favtile_button {
+    position: fixed;
+    right: 10px;
+    top: 39px;
+    font-size: 18px;
+    width: 100px;
+    color: #333;
+    text-shadow: 1px 1px 5px #999;
+    box-shadow: 0px 0px 3px white;
+    background: -moz-linear-gradient(top, #fff, #F1F1F1 1%, #F1F1F1 50%, #DFDFDF 99%, #ccc);  
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(0.01, #F1F1F1), color-stop(0.5, #F1F1F1), color-stop(0.99, #DFDFDF), to(#ccc));    border-radius: 5px;
+}
+
+.favtile_button:hover {
+    padding: 6px 4px 4px 6px;
+    background: -moz-linear-gradient(top, #fff, #e1e1e1 1%, #e1e1e1 50%, #cfcfcf 99%, #ccc);  
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(0.01, #e1e1e1), color-stop(0.5, #e1e1e1), color-stop(0.99, #cfcfcf), to(#ccc));
+}  
+
+.favtile_button, .screen_name_input {
+    padding: 5px;
+    z-index: 105;
 }

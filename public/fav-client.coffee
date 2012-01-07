@@ -30,7 +30,7 @@ twapi = (url, callback) ->
 
 class User extends Spine.Model
   @CACHE_TIME: 24 * 60 * 60 * 1000
-  @configure "User", "screen_name", "profile_background_image_url_https", "profile_background_tile", "profile_background_color", "saved_at"
+  @configure "User", "screen_name", "profile_image_url", "profile_background_image_url_https", "profile_background_tile", "profile_background_color", "saved_at"
   @extend Spine.Model.Local
   @cache: (screen_name) ->
     user = @findByAttribute("screen_name", screen_name)
@@ -45,7 +45,7 @@ class Tweets extends Spine.Controller
   decorate: (item) ->
     {text: text, entities: entities} = item
     v.type = t for v in values for own t, values of entities
-    entities = (v for own t, v of entities).reduce((a, b) -> a.concat b).sort (a, b) -> a.indices[0] - b.indices[0]
+    entities = (v for own t, v of entities).reduce(((a, b) -> a.concat b), []).sort (a, b) -> a.indices[0] - b.indices[0]
 
     el = $("<p>")
     pos = 0
@@ -88,9 +88,14 @@ class Fav extends Tweet
 
 class FavtileApp extends Spine.Controller
   events:
-    "click .hashtags": "searchReload"
+    "submit form": "userChange"
+    "focus .screen_name_input": "active"
+    "blur .screen_name_input": "inactive"
+
   elements:
     ".items": "items"
+    ".screen_name_input": "screen_name_input"
+    ".loading": "loading_img"
 
   constructor: ->
     super
@@ -105,26 +110,50 @@ class FavtileApp extends Spine.Controller
     @screen_name = /^\/(.*)/.exec(location.pathname)?.pop()
 
     if @screen_name
-      @set_background()
+      @setUserInformation()
 
       # load next favs when detect scroll to bottom
       $(window).bottom()
       $(window).bind "bottom", @moreFavs
 
       # recent 20 favs
-      twapi (favs_url @screen_name), (favs) ->
+      twapi (favs_url @screen_name), (favs) =>
         Fav.create fav for fav in favs
+        if favs.length is 0 then $(@el).find(".loading_footer").text("end of favotes.")
 
-    if location.hash
-      twapi (search_url location.hash), (result) ->
+    else if location.hash
+      $(@screen_name_input).val decodeURIComponent location.hash
+      twapi (search_url location.hash), (result) =>
+        console.log result.results
+        Search.create t for t in result.results
+        if result.results.length is 0 then $(@el).find(".loading_footer").text("end of favotes.")
+      $("header").append $("<a>").attr(href: "/").append $("<img>").attr class:"icon", src:"favicon73x73.png"
+    else
+      $("header").append $("<a>").attr(href: "/").append $("<img>").attr class:"icon", src:"favicon73x73.png"
+
+    $(window).bind 'hashchange', =>
+      console.log "hash change"
+      Search.destroyAll()
+      $(@screen_name_input).val decodeURIComponent location.hash
+      twapi (search_url location.hash), (result) =>
         console.log result.results
         Search.create t for t in result.results
 
-  searchReload: (e) ->
-    Search.destroyAll()
-    twapi (search_url e.target.text), (result) ->
-      console.log result.results
-      Search.create t for t in result.results
+    @before_data = @screen_name
+    @before_data or= location.hash
+
+  active: =>
+    @screen_name_input.addClass("active")
+
+  inactive: =>
+    @screen_name_input.removeClass("active")
+
+  userChange: (e) =>
+    e.preventDefault()
+    console.log $(@screen_name_input).val()
+    console.log @before_data
+    if $(@screen_name_input).val() isnt @before_data
+      location.href = "/#{$(@screen_name_input).val()}"
 
   addSearchOne: (search) =>
     view = new Tweets(item: search)
@@ -147,26 +176,42 @@ class FavtileApp extends Spine.Controller
     unless @loading
       console.log "bottom"
       @loading = true
+      $(@loading_img).toggle()
       twapi (favs_url @screen_name, ++@page), (favs) =>
+        console.log "load"
+        $(@loading_img).toggle()
         if favs.length isnt 0
           Fav.create fav for fav in favs
           @loading = false
+        else
+          console.log @el.find(".loading_footer").text("end of favotes.")
 
-  set_background: =>
-    set_bg = (user) ->
-      $('body').css
+  setSearchInformation: =>
+    $(@screen_name_input).val decodeURIComponent location.hash
+
+  setUserInformation: =>
+    set_bg = (user) =>
+      $("body").css
         'background-image': "url(#{user.profile_background_image_url_https})"
         'background-repeat': if user.profile_background_tile then "repeat" else "no-repeat"
         'background-color': "##{user.profile_background_color}"
         'background-attachment': "fixed"
+        'background-position': "0px 92px"
 
+    set_icon = (user) ->
+      $("header").append $("<img>").attr class:"icon", src:user.profile_image_url
+
+    $(@screen_name_input).val @screen_name
+    $(".username").text "@#{@screen_name}'s favtile"
     user = User.cache @screen_name
     if user
       set_bg user
+      set_icon user
     else
       twapi (lookup_url @screen_name), (users) ->
         user = users[0]
         set_bg user
+        set_icon user
         user.saved_at = (new Date).getTime()
         (User.create user).save()
 
