@@ -2,6 +2,6 @@
   "name": "favtile",
   "version": "0.0.1",
   "dependencies": {
-    "zappa": "2.5.1"
+    "zappa": "0.3.3"
   }
 }
