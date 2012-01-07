@@ -2,6 +2,7 @@
   "name": "favtile",
   "version": "0.0.1",
   "dependencies": {
-    "zappa": "0.3.3"
+    "zappa": "0.3.3",
+    "coffee-script":"1.1.3"
   }
 }
