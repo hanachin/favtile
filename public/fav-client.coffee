@@ -49,15 +49,17 @@ class Tweets extends Spine.Controller
 
     el = $("<p>")
     pos = 0
+    console.log entities
     for e in entities
       el.append text.substr(pos, e.indices[0] - pos)
       pos = e.indices[1]
       sub = text.substr(e.indices[0], e.indices[1] - e.indices[0])
+      console.log e.expanded_url ? e.display_url ? e.url
       el.append switch e.type
-        when "urls" then $("<a>").attr(class: "urls", target: "_blank", href: e.expanded_url).text e.display_url
+        when "urls" then $("<a>").attr(class: "urls", target: "_blank", href: e.expanded_url ? e.url).text e.display_url ? e.url
         when "user_mentions" then $("<a>").attr(class: "user_mentions", href: "/#{encodeURIComponent e.screen_name}").text sub
         when "hashtags" then $("<a>").attr(class: "hashtags", href: "/##{encodeURIComponent e.text}").text sub
-        when "media" then $("<a>").attr(class: "media", target: "_blank", href: e.expanded_url).text e.display_url
+        when "media" then $("<a>").attr(class: "media", target: "_blank", href: e.expanded_url ? e.url).text e.display_url ? e.url
         else
           console.log "unknown entity type", e
           sub
@@ -71,20 +73,20 @@ class Tweets extends Spine.Controller
 
   render: =>
     @replace($("#tweetTemplate").tmpl(@item))
-    $(@el).find("div").prepend @decorate @item
+    $(@el).find("p").replaceWith @decorate @item
     @
 
 class Tweet extends Spine.Model
   dateformat: => dateformat new Date @created_at
 
 class Search extends Tweet
-  @configure "Search", "from_user", "text", "entities", "id_str", "created_at", "profile_image_url"
+  @configure "Search", "user", "text", "entities", "id_str", "created_at", "from_user", "profile_image_url"
+  constructor: (obj) ->
+    super obj
+    @user = screen_name: @from_user, profile_image_url: @profile_image_url
 
 class Fav extends Tweet
-  @configure "Fav", "user", "text", "entities", "id_str", "created_at"
-
-# class Searches extends Tweets
-# class Favs extends Tweets
+  @configure "Tweet", "user", "text", "entities", "id_str", "created_at"
 
 class FavtileApp extends Spine.Controller
   events:
@@ -194,7 +196,7 @@ class FavtileApp extends Spine.Controller
         'background-repeat': if user.profile_background_tile then "repeat" else "no-repeat"
         'background-color': "##{user.profile_background_color}"
         'background-attachment': "fixed"
-        'background-position': "0px 92px"
+        'background-position': "0px 58px"
 
     set_icon = (user) ->
       $("header").append $("<img>").attr class:"icon", src:user.profile_image_url

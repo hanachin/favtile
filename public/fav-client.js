@@ -31,6 +31,8 @@
   };
 
   twapi = function(url, callback) {
+    if (localStorage[url]) console.log(JSON.parse(localStorage[url]));
+    if (localStorage[url]) return callback(JSON.parse(localStorage[url]));
     return $.getJSON(url, function(json) {
       console.log(json);
       localStorage[url] = JSON.stringify(json);
@@ -78,7 +80,7 @@
     }
 
     Tweets.prototype.decorate = function(item) {
-      var e, el, entities, m, media, pos, sizes, sub, t, text, v, values, _i, _j, _k, _len, _len2, _len3;
+      var e, el, entities, m, media, pos, sizes, sub, t, text, v, values, _i, _j, _k, _len, _len2, _len3, _ref, _ref2;
       text = item.text, entities = item.entities;
       for (t in entities) {
         if (!__hasProp.call(entities, t)) continue;
@@ -104,19 +106,22 @@
       });
       el = $("<p>");
       pos = 0;
+      console.log(entities);
       for (_j = 0, _len2 = entities.length; _j < _len2; _j++) {
         e = entities[_j];
         el.append(text.substr(pos, e.indices[0] - pos));
         pos = e.indices[1];
         sub = text.substr(e.indices[0], e.indices[1] - e.indices[0]);
+        console.log((_ref = (_ref2 = e.expanded_url) != null ? _ref2 : e.display_url) != null ? _ref : e.url);
         el.append((function() {
+          var _ref3, _ref4, _ref5, _ref6;
           switch (e.type) {
             case "urls":
               return $("<a>").attr({
                 "class": "urls",
                 target: "_blank",
-                href: e.expanded_url
-              }).text(e.display_url);
+                href: (_ref4 = e.expanded_url) != null ? _ref4 : e.url
+              }).text((_ref3 = e.display_url) != null ? _ref3 : e.url);
             case "user_mentions":
               return $("<a>").attr({
                 "class": "user_mentions",
@@ -131,8 +136,8 @@
               return $("<a>").attr({
                 "class": "media",
                 target: "_blank",
-                href: e.expanded_url
-              }).text(e.display_url);
+                href: (_ref6 = e.expanded_url) != null ? _ref6 : e.url
+              }).text((_ref5 = e.display_url) != null ? _ref5 : e.url);
             default:
               console.log("unknown entity type", e);
               return sub;
@@ -165,7 +170,7 @@
 
     Tweets.prototype.render = function() {
       this.replace($("#tweetTemplate").tmpl(this.item));
-      $(this.el).find("div").prepend(this.decorate(this.item));
+      $(this.el).find("p").replaceWith(this.decorate(this.item));
       return this;
     };
 
@@ -194,11 +199,15 @@
 
     __extends(Search, Tweet);
 
-    function Search() {
-      Search.__super__.constructor.apply(this, arguments);
-    }
+    Search.configure("Search", "user", "text", "entities", "id_str", "created_at", "from_user", "profile_image_url");
 
-    Search.configure("Search", "from_user", "text", "entities", "id_str", "created_at", "profile_image_url");
+    function Search(obj) {
+      Search.__super__.constructor.call(this, obj);
+      this.user = {
+        screen_name: this.from_user,
+        profile_image_url: this.profile_image_url
+      };
+    }
 
     return Search;
 
@@ -212,7 +221,7 @@
       Fav.__super__.constructor.apply(this, arguments);
     }
 
-    Fav.configure("Fav", "user", "text", "entities", "id_str", "created_at");
+    Fav.configure("Tweet", "user", "text", "entities", "id_str", "created_at");
 
     return Fav;
 
@@ -395,7 +404,7 @@
           'background-repeat': user.profile_background_tile ? "repeat" : "no-repeat",
           'background-color': "#" + user.profile_background_color,
           'background-attachment': "fixed",
-          'background-position': "0px 92px"
+          'background-position': "0px 58px"
         });
       };
       set_icon = function(user) {

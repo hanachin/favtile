@@ -15,89 +15,78 @@ body {
     background-image: url('top_background.png');
 }
 
-header {
+header.global {
     position: fixed;
     top: 0px;
     margin: 0px;
-    height: 92px;
+    height: 58px;
     width: 100%;
     background: rgba(0, 0, 0, 0.8);
     color: white;
     z-index: 100;
 }
 
-#favs {
-    margin: 92px 0px 0px 0px;
-}
-
-#favs footer {
-    padding: 20px;
-    margin-right: auto;
-    margin-left: auto;
-    text-align: center;
-}
-
-.loading {
-    display: none;
-}
-
-header h1 {
+header.global h1.username {
     position: fixed;
-    left: 93px;
-    top: 40px;
-    font-size: 30px;
+    left: 63px;
+    top: 20px;
+    font-size: 20px;
     margin: 0px;
 }
 
-header img.icon {
+header.global img.icon {
     position: fixed;
     left: 10px;
-    top: 10px;
-    width: 73px;
-    height: 73px;
-    border-radius: 10px;
+    top: 5px;
+    width: 48px;
+    height: 48px;
+    border-radius: 5px;
 }
 
-.item {
-    margin: 10px;
-    padding: 15px 20px;
+div.item {
+    margin: 5px;
+    padding: 5px 10px;
     word-wrap: break-word;
-    width: 220px;
+    width: 200px;
     background: rgba(255, 255, 255, 0.85);
     border-radius: 10px;
-    box-shadow: 0px 0px 10px #000;
+    box-shadow: 0px 0px 5px #000;
+    font-size: 14px;
 }
-.item img.icon {
+
+div.item img.icon {
+    border-radius: 5px;
+    margin-top: 3px;
     margin-right: 10px;
-    margin-bottom: 1px;
+    margin-bottom: 5px;
     width: 48px;
     height: 48px;
     float: left;
 }
 
-.item img.media {
+div.item img.media {
     /* width: 150px; */
     /* height:150px; */
 }
 
-.item p {
-    margin: 0px;
+div.item p {
+    margin-top: 0px;
     padding: 0px;
 }
 
-.item footer {
+div.item footer.item_footer {
     text-align: right;
     font-size: x-small;
 }
 
 
-.screen_name_input {
+input.screen_name_input {
     position: fixed;
     right: 120px;
-    top: 35px;
+    top: 10px;
     width: 170px;
     border-radius: 15px;
-    font-size: 24px;
+    font-size: 20px;
     color: #999;
 }
 
@@ -105,10 +94,10 @@ header img.icon {
     color: black;
 }
 
-.favtile_button {
+input.favtile_button {
     position: fixed;
     right: 10px;
-    top: 39px;
+    top: 12px;
     font-size: 18px;
     width: 100px;
     color: #333;
@@ -118,13 +107,27 @@ header img.icon {
     background: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(0.01, #F1F1F1), color-stop(0.5, #F1F1F1), color-stop(0.99, #DFDFDF), to(#ccc));    border-radius: 5px;
 }
 
-.favtile_button:hover {
+input.favtile_button:hover {
     padding: 6px 4px 4px 6px;
     background: -moz-linear-gradient(top, #fff, #e1e1e1 1%, #e1e1e1 50%, #cfcfcf 99%, #ccc);  
     background: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(0.01, #e1e1e1), color-stop(0.5, #e1e1e1), color-stop(0.99, #cfcfcf), to(#ccc));
 }  
 
-.favtile_button, .screen_name_input {
+input.favtile_button, input.screen_name_input {
     padding: 5px;
     z-index: 105;
+}
+
+#favs {
+    margin: 60px 0px 0px 0px;
+}
+
+#favs footer.loading_footer {
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+.loading {
+    display: none;
 }
