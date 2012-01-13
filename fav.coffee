@@ -38,5 +38,6 @@ require("zappa") port, ->
               a class: "status", href: "http://twitter.com/${user.screen_name}/statuses/${id_str}", -> "${dateformat()}"
       body ->
         header class: "global", ->
-          h1 class: "username", -> "favtile"
+          a href: "/", ->
+            img class: "username", src: "logo.png", -> ""
         @body

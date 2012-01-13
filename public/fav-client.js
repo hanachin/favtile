@@ -414,7 +414,6 @@
         }));
       };
       $(this.screen_name_input).val(this.screen_name);
-      $(".username").text("@" + this.screen_name + "'s favtile");
       user = User.cache(this.screen_name);
       if (user) {
         set_bg(user);

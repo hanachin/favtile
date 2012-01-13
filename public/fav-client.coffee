@@ -202,7 +202,6 @@ class FavtileApp extends Spine.Controller
       $("header").append $("<img>").attr class:"icon", src:user.profile_image_url
 
     $(@screen_name_input).val @screen_name
-    $(".username").text "@#{@screen_name}'s favtile"
     user = User.cache @screen_name
     if user
       set_bg user
