@@ -70,6 +70,10 @@ div.item {
     font-weight: bold;
 }
 
+.item .status {
+    color:#3C3940
+}
+
 div.item img.icon {
     border-radius: 5px;
     margin-top: 3px;
@@ -94,7 +98,6 @@ div.item footer.item_footer {
     text-align: right;
     font-size: x-small;
 }
-
 
 input.screen_name_input {
     position: fixed;
