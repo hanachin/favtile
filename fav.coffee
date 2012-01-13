@@ -1,9 +1,51 @@
+OAuth = require("oauth").OAuth
+
 port = Number(process.env.PORT || 3000)
+
+oauth = new OAuth(
+  "https://api.twitter.com/oauth/request_token",
+  "https://api.twitter.com/oauth/access_token",
+  "your oauth consumer key",
+  "your oauth consumer secret key",
+  "1.0",
+  "http://localhost:3000/signin",
+  "HMAC-SHA1"
+)
+
 require("zappa") port, ->
-  @use 'static'
+  @use 'static', 'cookieParser', session:{secret:"kwae3n2j2nbjsduzhua2"}
+
+  @get '/signin': ->
+    if @session.user
+      @render 'signin', user: @session.user
+      return
+
+    oauth_token = @query.oauth_token
+    oauth_verifier = @query.oauth_verifier
+    if oauth_token and oauth_verifier and @session.oauth
+      oauth.getOAuthAccessToken oauth_token, null, oauth_verifier,
+        (err, oauth_access_token, oauth_access_token_secret, results) =>
+          if err
+            @send err, 500
+          else
+            @session.user = results.screen_name
+            @redirect "/"
+    else
+      oauth.getOAuthRequestToken (err, oauth_token, oauth_token_secret, results) =>
+        if err
+          @send err, 500
+        else
+          @session.oauth =
+            oauth_token: oauth_token
+            oauth_token_secret: oauth_token_secret
+            request_token_results: results
+          @redirect "https://api.twitter.com/oauth/authorize?oauth_token=#{oauth_token}"
 
   @get '/?:id?': ->
     @render 'index', id: (@params.id ? "")
+
+  @view signin: ->
+    h1 -> @user
 
   @view index: ->
     script src: '/fav-client.js', charset: 'utf-8'
