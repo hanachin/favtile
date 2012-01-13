@@ -49,7 +49,6 @@ class Tweets extends Spine.Controller
 
     el = $("<p>")
     pos = 0
-    console.log entities
     for e in entities
       el.append text.substr(pos, e.indices[0] - pos)
       pos = e.indices[1]

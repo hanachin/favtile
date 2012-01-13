@@ -80,7 +80,7 @@
     }
 
     Tweets.prototype.decorate = function(item) {
-      var e, el, entities, m, media, pos, sizes, sub, t, text, v, values, _i, _j, _k, _len, _len2, _len3, _ref, _ref2;
+      var e, el, entities, m, media, pos, sizes, sub, t, text, v, values, _i, _j, _k, _len, _len2, _len3;
       text = item.text, entities = item.entities;
       for (t in entities) {
         if (!__hasProp.call(entities, t)) continue;
@@ -106,22 +106,20 @@
       });
       el = $("<p>");
       pos = 0;
-      console.log(entities);
       for (_j = 0, _len2 = entities.length; _j < _len2; _j++) {
         e = entities[_j];
         el.append(text.substr(pos, e.indices[0] - pos));
         pos = e.indices[1];
         sub = text.substr(e.indices[0], e.indices[1] - e.indices[0]);
-        console.log((_ref = (_ref2 = e.expanded_url) != null ? _ref2 : e.display_url) != null ? _ref : e.url);
         el.append((function() {
-          var _ref3, _ref4, _ref5, _ref6;
+          var _ref, _ref2, _ref3, _ref4;
           switch (e.type) {
             case "urls":
               return $("<a>").attr({
                 "class": "urls",
                 target: "_blank",
-                href: (_ref4 = e.expanded_url) != null ? _ref4 : e.url
-              }).text((_ref3 = e.display_url) != null ? _ref3 : e.url);
+                href: (_ref2 = e.expanded_url) != null ? _ref2 : e.url
+              }).text((_ref = e.display_url) != null ? _ref : e.url);
             case "user_mentions":
               return $("<a>").attr({
                 "class": "user_mentions",
@@ -136,8 +134,8 @@
               return $("<a>").attr({
                 "class": "media",
                 target: "_blank",
-                href: (_ref6 = e.expanded_url) != null ? _ref6 : e.url
-              }).text((_ref5 = e.display_url) != null ? _ref5 : e.url);
+                href: (_ref4 = e.expanded_url) != null ? _ref4 : e.url
+              }).text((_ref3 = e.display_url) != null ? _ref3 : e.url);
             default:
               console.log("unknown entity type", e);
               return sub;
