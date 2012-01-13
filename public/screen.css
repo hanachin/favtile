@@ -52,6 +52,24 @@ div.item {
     font-size: 14px;
 }
 
+.item a {
+    color: #0084B4;
+    text-decoration: none;
+}
+
+.item a:hover {
+    text-decoration: underline;
+}
+
+.item:hover a {
+    color: #0084B4;
+}
+
+.item .screen_name {
+    color: black;
+    font-weight: bold;
+}
+
 div.item img.icon {
     border-radius: 5px;
     margin-top: 3px;

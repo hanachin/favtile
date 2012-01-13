@@ -78,10 +78,9 @@ require("zappa") port, ->
         script id: 'tweetTemplate', type: 'x-jquery-tmpl', ->
           div class: "item", ->
             a class: "icon_link", href: "/${user.screen_name}", -> img class:"icon", src: "${user.profile_image_url}"
+            a class: "screen_name", href: "/${user.screen_name}", -> "${user.screen_name}"
             p class: "item_content", ->
             footer class:"item_footer", ->
-              a class: "screen_name", href: "/${user.screen_name}", -> "@${user.screen_name}"
-              text " "
               a class: "status", href: "http://twitter.com/${user.screen_name}/statuses/${id_str}", -> "${dateformat()}"
       body ->
         header class: "global", ->
