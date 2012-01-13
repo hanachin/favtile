@@ -54,7 +54,6 @@ class Tweets extends Spine.Controller
       el.append text.substr(pos, e.indices[0] - pos)
       pos = e.indices[1]
       sub = text.substr(e.indices[0], e.indices[1] - e.indices[0])
-      console.log e.expanded_url ? e.display_url ? e.url
       el.append switch e.type
         when "urls" then $("<a>").attr(class: "urls", target: "_blank", href: e.expanded_url ? e.url).text e.display_url ? e.url
         when "user_mentions" then $("<a>").attr(class: "user_mentions", href: "/#{encodeURIComponent e.screen_name}").text sub
