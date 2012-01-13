@@ -15,9 +15,14 @@ oauth = new OAuth(
 require("zappa") port, ->
   @use 'static', 'cookieParser', session:{secret:"kwae3n2j2nbjsduzhua2"}
 
+  @get '/signout': ->
+    @session.user = undefined
+    @session.oauth = {}
+    @redirect "/"
+
   @get '/signin': ->
-    if @session.user
-      @render 'signin', user: @session.user
+    if @session.oauth?.results
+      @redirect "/"
       return
 
     oauth_token = @query.oauth_token
@@ -29,6 +34,9 @@ require("zappa") port, ->
             @send err, 500
           else
             @session.user = results.screen_name
+            @session.oauth.results = results
+            @session.oauth.oauth_access_token = oauth_access_token
+            @session.oauth.oauth_access_token_secret = oauth_access_token_secret
             @redirect "/"
     else
       oauth.getOAuthRequestToken (err, oauth_token, oauth_token_secret, results) =>
@@ -42,10 +50,7 @@ require("zappa") port, ->
           @redirect "https://api.twitter.com/oauth/authorize?oauth_token=#{oauth_token}"
 
   @get '/?:id?': ->
-    @render 'index', id: (@params.id ? "")
-
-  @view signin: ->
-    h1 -> @user
+    @render 'index', id: (@params.id ? ""), session: @session
 
   @view index: ->
     script src: '/fav-client.js', charset: 'utf-8'
@@ -82,4 +87,8 @@ require("zappa") port, ->
         header class: "global", ->
           a href: "/", ->
             img class: "username", src: "/logo.png", -> ""
+          if @session?.user?
+            a class:"signout", href: "/signout", -> "Sign out"
+          else
+            a class:"signin", href: "/signin", -> "Sign in with Twitter"
         @body
