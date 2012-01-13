@@ -170,7 +170,7 @@
 
     Tweets.prototype.render = function() {
       this.replace($("#tweetTemplate").tmpl(this.item));
-      $(this.el).find("p").replaceWith(this.decorate(this.item));
+      $(this.el).find(".item_content").replaceWith(this.decorate(this.item));
       return this;
     };
 

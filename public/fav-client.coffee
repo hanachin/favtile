@@ -73,7 +73,7 @@ class Tweets extends Spine.Controller
 
   render: =>
     @replace($("#tweetTemplate").tmpl(@item))
-    $(@el).find("p").replaceWith @decorate @item
+    $(@el).find(".item_content").replaceWith @decorate @item
     @
 
 class Tweet extends Spine.Model
