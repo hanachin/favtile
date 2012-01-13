@@ -165,8 +165,6 @@ class FavtileApp extends Spine.Controller
     view = new Tweets(item: fav)
     el = view.render().el
     @items.append(el)
-    # adjust height
-    # $(el).height (Math.floor($(el).height() / $(el).width()) + 1) * $(el).width() - 16
     $(@items).masonry("appended", el).masonry('reload')
 
   moreFavs: =>
