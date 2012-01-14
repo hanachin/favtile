@@ -45,7 +45,7 @@ div.item {
     margin: 5px;
     padding: 5px 10px;
     word-wrap: break-word;
-    width: 200px;
+    width: 210px;
     background: rgba(255, 255, 255, 0.85);
     border-radius: 10px;
     box-shadow: 0px 0px 5px #000;
@@ -78,7 +78,7 @@ div.item {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14px;
 	color: #666666;
-	padding: 0px 5px;
+	padding: 0px 3px;
 	background: -moz-linear-gradient(
 		top,
 		#f6f6f6 0%,
@@ -116,7 +116,7 @@ div.item {
     display: block;
 }
 .item .tools .rt, .item .tools .star {
-    margin-left: 3px;
+    margin-left: 1px;
 }
 .item .tools .retweet_button:hover {
     color: #000;
@@ -227,14 +227,14 @@ input.favtile_button, input.screen_name_input {
 
 .signin {
     position: fixed;
-    top: 20px;
+    top: 30px;
     right: 10px;
     color: #eee;
 }
 
 .signout {
     position: fixed;
-    top: 20px;
+    top: 30px;
     right: 10px;
     color: #eee;
 }
