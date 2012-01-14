@@ -88,11 +88,19 @@ require("zappa") port, ->
             footer class:"item_footer", ->
               div class: "tools", ->
                 span class: "fav_button", ->
+                  text "{{if favorited}}"
                   img src:"/star.png"
+                  text "{{else}}"
+                  img src:"/star_w.png"
+                  text "{{/if}}"
                   span class:"star", -> "fav"
                 text " | "
                 span class: "retweet_button", ->
+                  text "{{if retweeted}}"
                   img src:"/rt.png"
+                  text "{{else}}"
+                  img src:"/rt_w.png"
+                  text "{{/if}}"
                   span class:"rt", -> "RT"
               a class: "status", href: "http://twitter.com/${user.screen_name}/statuses/${id_str}", -> "${dateformat()}"
       body ->

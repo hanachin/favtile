@@ -212,7 +212,7 @@
 
     __extends(Search, Tweet);
 
-    Search.configure("Search", "user", "text", "entities", "id_str", "created_at", "from_user", "profile_image_url");
+    Search.configure("Search", "user", "text", "entities", "id_str", "created_at", "retweeted", "favorited", "from_user", "profile_image_url");
 
     function Search(obj) {
       Search.__super__.constructor.call(this, obj);
@@ -234,7 +234,7 @@
       Fav.__super__.constructor.apply(this, arguments);
     }
 
-    Fav.configure("Tweet", "user", "text", "entities", "id_str", "created_at");
+    Fav.configure("Tweet", "user", "text", "entities", "id_str", "created_at", "retweeted", "favorited");
 
     return Fav;
 

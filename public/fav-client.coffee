@@ -88,13 +88,13 @@ class Tweet extends Spine.Model
   dateformat: => dateformat new Date @created_at
 
 class Search extends Tweet
-  @configure "Search", "user", "text", "entities", "id_str", "created_at", "from_user", "profile_image_url"
+  @configure "Search", "user", "text", "entities", "id_str", "created_at", "retweeted", "favorited", "from_user", "profile_image_url"
   constructor: (obj) ->
     super obj
     @user = screen_name: @from_user, profile_image_url: @profile_image_url
 
 class Fav extends Tweet
-  @configure "Tweet", "user", "text", "entities", "id_str", "created_at"
+  @configure "Tweet", "user", "text", "entities", "id_str", "created_at", "retweeted", "favorited"
 
 class FavtileApp extends Spine.Controller
   events:
