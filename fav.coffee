@@ -81,6 +81,14 @@ require("zappa") port, ->
             a class: "screen_name", href: "/${user.screen_name}", -> "${user.screen_name}"
             p class: "item_content", ->
             footer class:"item_footer", ->
+              div class: "tools", ->
+                a class: "fav", ->
+                  img src:"/star.png"
+                  span class:"star", -> "fav"
+                text " | "
+                a class: "retweet", ->
+                  img src:"/rt.png"
+                  span class:"rt", -> "RT"
               a class: "status", href: "http://twitter.com/${user.screen_name}/statuses/${id_str}", -> "${dateformat()}"
       body ->
         header class: "global", ->
