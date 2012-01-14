@@ -12,7 +12,6 @@ body {
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-position: left top;
-    background-image: url('top_background.png');
 }
 
 header.global {

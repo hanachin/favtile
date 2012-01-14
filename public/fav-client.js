@@ -306,6 +306,7 @@
           src: "favicon73x73.png"
         })));
       } else {
+        $("body").css("background-image", "url('top_background.png')");
         $("header").append($("<a>").attr({
           href: "/"
         }).append($("<img>").attr({

@@ -137,6 +137,7 @@ class FavtileApp extends Spine.Controller
         if result.results.length is 0 then $(@el).find(".loading_footer").text("end of favotes.")
       $("header").append $("<a>").attr(href: "/").append $("<img>").attr class:"icon", src:"favicon73x73.png"
     else
+      $("body").css("background-image", "url('top_background.png')")
       $("header").append $("<a>").attr(href: "/").append $("<img>").attr class:"icon", src:"favicon73x73.png"
 
     $(window).bind 'hashchange', =>
