@@ -73,6 +73,11 @@
 
     __extends(Tweets, Spine.Controller);
 
+    Tweets.prototype.events = {
+      "click .fav_button": "fav",
+      "click .retweet_button": "retweet"
+    };
+
     function Tweets() {
       this.render = __bind(this.render, this);      Tweets.__super__.constructor.apply(this, arguments);
       this.item.bind("update", this.render);
@@ -164,6 +169,14 @@
         }).css(sizes));
       }
       return el;
+    };
+
+    Tweets.prototype.fav = function(e) {
+      return console.log(this.item.id_str);
+    };
+
+    Tweets.prototype.retweet = function(e) {
+      return console.log(this.item.id_str);
     };
 
     Tweets.prototype.render = function() {

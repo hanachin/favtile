@@ -37,6 +37,9 @@ class User extends Spine.Model
     if ((new Date).getTime() - User.CACHE_TIME) < user?.saved_at then user else null
 
 class Tweets extends Spine.Controller
+  events:
+    "click .fav_button": "fav"
+    "click .retweet_button": "retweet"
   constructor: ->
     super
     @item.bind("update", @render)
@@ -68,6 +71,12 @@ class Tweets extends Spine.Controller
       sizes = width: m.sizes.thumb.w, height: m.sizes.thumb.h
       el.append $("<img>").attr(class: "media", src: "#{m.media_url}:thumb").css(sizes)
     el
+
+  fav: (e) ->
+    console.log @item.id_str
+
+  retweet: (e) ->
+    console.log @item.id_str
 
   render: =>
     @replace($("#tweetTemplate").tmpl(@item))

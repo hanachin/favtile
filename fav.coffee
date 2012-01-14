@@ -75,6 +75,11 @@ require("zappa") port, ->
         script src: '/jquery.masonry.min.js', charset: 'utf-8'
         script src: '/spine.js', charset: 'utf-8'
         script src: '/local.js', charset: 'utf-8'
+        script charset: 'utf-8', ->
+          if @session?.oauth?
+            "oauth = #{JSON.stringify @session.oauth};"
+          else
+            "oauth = {};"
         script id: 'tweetTemplate', type: 'x-jquery-tmpl', ->
           div class: "item", ->
             a class: "icon_link", href: "/${user.screen_name}", -> img class:"icon", src: "${user.profile_image_url}"
