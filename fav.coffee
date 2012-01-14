@@ -93,7 +93,7 @@ require("zappa") port, ->
       body ->
         header class: "global", ->
           a href: "/", ->
-            img class: "username", src: "/logo.png", -> ""
+            img class: "username", src: "/logo.png"
           if @session?.user?
             a class:"signout", href: "/signout", -> "Sign out"
           else
