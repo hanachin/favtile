@@ -25,7 +25,9 @@ twapi = (url, callback) ->
   $.getJSON url, (json) ->
     console.log json
     # localStorage[url] = JSON.stringify json
-    throw "error: #{url}" if json.errors?
+    # throw "error: #{url}" if json.errors?
+    if json.errors?
+      $("#error").append $("<p>").text "Error: #{error.message}" for error in json.errors
     callback json
 
 class User extends Spine.Model

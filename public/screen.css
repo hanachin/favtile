@@ -214,6 +214,10 @@ input.favtile_button, input.screen_name_input {
     margin: 60px 0px 0px 0px;
 }
 
+#error {
+    margin: 60px 0px 0px 0px;
+}
+
 #favs footer.loading_footer {
     margin-right: auto;
     margin-left: auto;

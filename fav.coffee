@@ -103,4 +103,5 @@ require("zappa") port, ->
             a class:"signout", href: "/signout", -> "Sign out"
           else
             a class:"signin", href: "/signin", -> "Sign in with Twitter"
+        p id:"error"
         @body
