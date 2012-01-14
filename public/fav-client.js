@@ -289,7 +289,7 @@
             Fav.create(fav);
           }
           if (favs.length === 0) {
-            return $(_this.el).find(".loading_footer").text("end of favotes.");
+            return $(_this.el).find(".loading_footer").text("0 favorites.");
           }
         });
       } else if (location.hash) {

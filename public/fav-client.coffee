@@ -129,7 +129,7 @@ class FavtileApp extends Spine.Controller
       # recent 20 favs
       twapi (favs_url @screen_name), (favs) =>
         Fav.create fav for fav in favs
-        if favs.length is 0 then $(@el).find(".loading_footer").text("end of favotes.")
+        if favs.length is 0 then $(@el).find(".loading_footer").text("0 favorites.")
 
     else if location.hash
       $(@screen_name_input).val decodeURIComponent location.hash
