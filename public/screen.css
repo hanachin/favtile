@@ -118,6 +118,12 @@ div.item {
 .item .tools .rt, .item .tools .star {
     margin-left: 3px;
 }
+.item .tools .retweet_button:hover {
+    color: #000;
+}
+.item .tools .fav_button:hover {
+    color: #000;
+}
 
 div.item img.icon {
     border-radius: 5px;

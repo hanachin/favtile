@@ -82,11 +82,11 @@ require("zappa") port, ->
             p class: "item_content", ->
             footer class:"item_footer", ->
               div class: "tools", ->
-                a class: "fav_button", ->
+                span class: "fav_button", ->
                   img src:"/star.png"
                   span class:"star", -> "fav"
                 text " | "
-                a class: "retweet_button", ->
+                span class: "retweet_button", ->
                   img src:"/rt.png"
                   span class:"rt", -> "RT"
               a class: "status", href: "http://twitter.com/${user.screen_name}/statuses/${id_str}", -> "${dateformat()}"
