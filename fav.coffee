@@ -13,7 +13,7 @@ oauth = new OAuth(
 )
 
 require("zappa") port, ->
-  @use 'static', 'cookieParser', session:{secret:"kwae3n2j2nbjsduzhua2"}
+  @use 'static', 'cookieParser', session:{secret:"kwae3n2j2nbjsduzhua2"}, basicAuth:((u, p) -> u is 'hanachin' and p is 'zxcvbnm')
 
   @get '/signout': ->
     @session.user = undefined
