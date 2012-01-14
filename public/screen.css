@@ -115,12 +115,14 @@ div.item {
     display: block;
 }
 .item .tools .rt, .item .tools .star {
-    margin-left: 1px;
+    margin-left: 3px;
 }
 .item .tools .retweet_button:hover {
+    cursor: pointer;
     color: #000;
 }
 .item .tools .fav_button:hover {
+    cursor: pointer;
     color: #000;
 }
 
