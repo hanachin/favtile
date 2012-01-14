@@ -31,11 +31,8 @@
   };
 
   twapi = function(url, callback) {
-    if (localStorage[url]) console.log(JSON.parse(localStorage[url]));
-    if (localStorage[url]) return callback(JSON.parse(localStorage[url]));
     return $.getJSON(url, function(json) {
       console.log(json);
-      localStorage[url] = JSON.stringify(json);
       if (json.errors != null) throw "error: " + url;
       return callback(json);
     });
@@ -52,8 +49,6 @@
     User.CACHE_TIME = 24 * 60 * 60 * 1000;
 
     User.configure("User", "screen_name", "profile_image_url", "profile_background_image_url_https", "profile_background_tile", "profile_background_color", "saved_at");
-
-    User.extend(Spine.Model.Local);
 
     User.cache = function(screen_name) {
       var user;

@@ -19,19 +19,18 @@ dateformat = (d) ->
 
 twapi = (url, callback) ->
   # for debug
-  console.log JSON.parse localStorage[url] if localStorage[url]
-  return callback JSON.parse localStorage[url] if localStorage[url]
+  # console.log JSON.parse localStorage[url] if localStorage[url]
+  # return callback JSON.parse localStorage[url] if localStorage[url]
 
   $.getJSON url, (json) ->
     console.log json
-    localStorage[url] = JSON.stringify json
+    # localStorage[url] = JSON.stringify json
     throw "error: #{url}" if json.errors?
     callback json
 
 class User extends Spine.Model
   @CACHE_TIME: 24 * 60 * 60 * 1000
   @configure "User", "screen_name", "profile_image_url", "profile_background_image_url_https", "profile_background_tile", "profile_background_color", "saved_at"
-  @extend Spine.Model.Local
   @cache: (screen_name) ->
     user = @findByAttribute("screen_name", screen_name)
     if ((new Date).getTime() - User.CACHE_TIME) < user?.saved_at then user else null
