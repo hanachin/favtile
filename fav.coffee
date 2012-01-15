@@ -57,7 +57,6 @@ require("zappa") port, ->
         script src: '/jquery.bottom-1.0.js', charset: 'utf-8'
         script src: '/jquery.masonry.min.js', charset: 'utf-8'
         script src: '/spine.js', charset: 'utf-8'
-        script src: '/local.js', charset: 'utf-8'
         script charset: 'utf-8', ->
           if @session?.twitter?
             "twitter = true"
