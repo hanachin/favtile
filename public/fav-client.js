@@ -42,16 +42,21 @@
 
   twapi = function(url, callback) {
     return $.getJSON(url, function(json) {
-      var error, _i, _len, _ref;
+      var error, _i, _len, _ref, _results;
       console.log(json);
       if (json.errors != null) {
         _ref = json.errors;
+        _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           error = _ref[_i];
-          $("#error").append($("<p>").text("Error: " + error.message));
+          _results.push($("#error").append($("<p>").text("Error: " + error.message)));
         }
+        return _results;
+      } else if (json.error != null) {
+        return $("#error").append($("<p>").text("Error: " + json.error));
+      } else {
+        return callback(json);
       }
-      return callback(json);
     });
   };
 

@@ -31,7 +31,10 @@ twapi = (url, callback) ->
     console.log json
     if json.errors?
       $("#error").append $("<p>").text "Error: #{error.message}" for error in json.errors
-    callback json
+    else if json.error?
+      $("#error").append $("<p>").text "Error: #{json.error}"
+    else
+      callback json
 
 class User extends Spine.Model
   @CACHE_TIME: 24 * 60 * 60 * 1000
