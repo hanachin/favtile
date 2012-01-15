@@ -88,7 +88,7 @@ require("zappa") port, ->
       body ->
         header class: "global", ->
           a href: "/", ->
-            img class: "username", src: "/logo.png"
+            img class: "logo", src: "/logo.png"
           if @session?.twitter
             a class:"signout", href: "/sessions/logout", -> "Sign out"
           else
