@@ -1,53 +1,15 @@
-OAuth = require("oauth").OAuth
+twitter = require "express-twitter"
 
 port = Number(process.env.PORT || 3000)
 
-oauth = new OAuth(
-  "https://api.twitter.com/oauth/request_token",
-  "https://api.twitter.com/oauth/access_token",
-  "your oauth consumer key",
-  "your oauth consumer secret key",
-  "1.0",
-  "http://localhost:3000/signin",
-  "HMAC-SHA1"
-)
-
 require("zappa") port, ->
-  @use 'static', 'cookieParser', session:{secret:"kwae3n2j2nbjsduzhua2"}, basicAuth:((u, p) -> u is 'hanachin' and p is 'zxcvbnm')
-
-  @get '/signout': ->
-    @session.user = undefined
-    @session.oauth = {}
-    @redirect "/"
-
-  @get '/signin': ->
-    if @session.oauth?.results
-      @redirect "/"
-      return
-
-    oauth_token = @query.oauth_token
-    oauth_verifier = @query.oauth_verifier
-    if oauth_token and oauth_verifier and @session.oauth
-      oauth.getOAuthAccessToken oauth_token, null, oauth_verifier,
-        (err, oauth_access_token, oauth_access_token_secret, results) =>
-          if err
-            @send err, 500
-          else
-            @session.user = results.screen_name
-            @session.oauth.results = results
-            @session.oauth.oauth_access_token = oauth_access_token
-            @session.oauth.oauth_access_token_secret = oauth_access_token_secret
-            @redirect "/"
-    else
-      oauth.getOAuthRequestToken (err, oauth_token, oauth_token_secret, results) =>
-        if err
-          @send err, 500
-        else
-          @session.oauth =
-            oauth_token: oauth_token
-            oauth_token_secret: oauth_token_secret
-            request_token_results: results
-          @redirect "https://api.twitter.com/oauth/authorize?oauth_token=#{oauth_token}"
+  @use 'static', 'cookieParser',
+    session: { secret: "kwae3n2j2nbjsduzhua2" }
+    basicAuth:((u, p) -> u is 'hanachin' and p is 'zxcvbnm'),
+    twitter.middleware
+      consumerKey: "your consumer key"
+      consumerSecret: "your consumer secret"
+      baseURL: "http://localhost:3000"
 
   @get '/?:id?': ->
     @render 'index', id: (@params.id ? ""), session: @session
@@ -107,9 +69,9 @@ require("zappa") port, ->
         header class: "global", ->
           a href: "/", ->
             img class: "username", src: "/logo.png"
-          if @session?.user?
-            a class:"signout", href: "/signout", -> "Sign out"
+          if @session?.twitter
+            a class:"signout", href: "/sessions/logout", -> "Sign out"
           else
-            a class:"signin", href: "/signin", -> "Sign in with Twitter"
+            a class:"signin", href: "/sessions/login", -> "Sign in with Twitter"
         p id:"error"
         @body
