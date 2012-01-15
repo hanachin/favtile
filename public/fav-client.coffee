@@ -25,11 +25,6 @@ search_url = (q, page = 1) ->
   else
     twapi_url "/search", q: q, rpp: 100, result_type: "mixed"
 
-dateformat = (d) ->
-  date = [d.getFullYear(), d.getMonth() + 1, d.getDate()].join "-"
-  time = [d.getHours(), d.getMinutes(), d.getSeconds()].join ":"
-  "#{date} #{time}"
-
 twapi = (url, callback) ->
   $.getJSON url, (json) ->
     console.log json
@@ -88,6 +83,11 @@ class Tweets extends Spine.Controller
     @
 
 class Tweet extends Spine.Model
+  dateformat = (d) ->
+    date = [d.getFullYear(), d.getMonth() + 1, d.getDate()].join "-"
+    time = [d.getHours(), d.getMinutes(), d.getSeconds()].join ":"
+    "#{date} #{time}"
+
   dateformat: => dateformat new Date @created_at
 
 class Search extends Tweet

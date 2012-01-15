@@ -1,5 +1,5 @@
 (function() {
-  var $, Fav, FavtileApp, Search, Tweet, Tweets, dateformat, favs_url, lookup_url, search_url, twapi, twapi_url;
+  var $, Fav, FavtileApp, Search, Tweet, Tweets, favs_url, lookup_url, search_url, twapi, twapi_url;
   var __hasProp = Object.prototype.hasOwnProperty, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   $ = jQuery;
@@ -56,13 +56,6 @@
         result_type: "mixed"
       });
     }
-  };
-
-  dateformat = function(d) {
-    var date, time;
-    date = [d.getFullYear(), d.getMonth() + 1, d.getDate()].join("-");
-    time = [d.getHours(), d.getMinutes(), d.getSeconds()].join(":");
-    return "" + date + " " + time;
   };
 
   twapi = function(url, callback) {
@@ -206,6 +199,7 @@
   })();
 
   Tweet = (function() {
+    var dateformat;
 
     __extends(Tweet, Spine.Model);
 
@@ -213,6 +207,13 @@
       this.dateformat = __bind(this.dateformat, this);
       Tweet.__super__.constructor.apply(this, arguments);
     }
+
+    dateformat = function(d) {
+      var date, time;
+      date = [d.getFullYear(), d.getMonth() + 1, d.getDate()].join("-");
+      time = [d.getHours(), d.getMinutes(), d.getSeconds()].join(":");
+      return "" + date + " " + time;
+    };
 
     Tweet.prototype.dateformat = function() {
       return dateformat(new Date(this.created_at));
