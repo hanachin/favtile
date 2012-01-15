@@ -15,7 +15,7 @@ require("zappa") port, ->
     if @session?.twitter?
       callback()
     else
-      "{errors:[{message:'login first to use api.'}]}"
+      '{"error":"login first to use api."}'
 
   @get '/api/lookup/:screen_name': ->
     path = "/users/lookup.json?screen_name=#{encodeURIComponent @params.screen_name}&include_entities=true&suppress_response_codes=true"
