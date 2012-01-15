@@ -23,7 +23,7 @@ require("zappa") port, ->
       twitter.getJSON path, @request, (err, data, response) => @send data
 
   @get '/api/search/:q/:page': ->
-    path = "/search.json?q=#{encodeURIComponent q}&rpp=100&result_type=mixed&include_entities=true&suppress_response_codes=true"
+    path = "/search.json?q=#{encodeURIComponent @params.q}&rpp=100&result_type=mixed&include_entities=true&suppress_response_codes=true"
     @needLoggedIn =>
       twitter.getJSON path, @request, (err, data, response) => @send data
 
