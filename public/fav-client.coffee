@@ -2,18 +2,24 @@ $ = jQuery
 
 lookup_url = (screen_name) ->
   throw "screen_name is missing." unless screen_name
-  "https://api.twitter.com/1/users/lookup.json?screen_name=#{encodeURIComponent screen_name}&include_entities=true&suppress_response_codes=true&callback=?"
+  if twitter
+    "/api/lookup/#{encodeURIComponent screen_name}"
+  else
+    "https://api.twitter.com/1/users/lookup.json?screen_name=#{encodeURIComponent screen_name}&include_entities=true&suppress_response_codes=true&callback=?"
 
 favs_url = (id, page = 1) ->
   throw "twitter id is missing." unless id
   if twitter
-    "/api/favs/#{id}/#{page}"
+    "/api/favs/#{encodeURIComponent id}/#{page}"
   else
     "https://api.twitter.com/1/favorites.json?id=#{encodeURIComponent id}&page=#{page}&count=20&include_entities=true&suppress_response_codes=true&callback=?"
 
-search_url = (q, page = 1, rpp = 100) ->
+search_url = (q, page = 1) ->
   throw "search query is missing." unless q
-  "http://search.twitter.com/search.json?q=#{encodeURIComponent q}&rpp=#{rpp}&result_type=mixed&include_entities=true&suppress_response_codes=true&callback=?"
+  if twitter
+    "/api/search/#{encodeURIComponent q}/#{page}"
+  else
+    "http://search.twitter.com/search.json?q=#{encodeURIComponent q}&rpp=100&result_type=mixed&include_entities=true&suppress_response_codes=true&callback=?"
 
 dateformat = (d) ->
   date = [d.getFullYear(), d.getMonth() + 1, d.getDate()].join "-"
@@ -21,14 +27,8 @@ dateformat = (d) ->
   "#{date} #{time}"
 
 twapi = (url, callback) ->
-  # for debug
-  # console.log JSON.parse localStorage[url] if localStorage[url]
-  # return callback JSON.parse localStorage[url] if localStorage[url]
-
   $.getJSON url, (json) ->
     console.log json
-    # localStorage[url] = JSON.stringify json
-    # throw "error: #{url}" if json.errors?
     if json.errors?
       $("#error").append $("<p>").text "Error: #{error.message}" for error in json.errors
     callback json

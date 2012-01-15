@@ -6,24 +6,31 @@
 
   lookup_url = function(screen_name) {
     if (!screen_name) throw "screen_name is missing.";
-    return "https://api.twitter.com/1/users/lookup.json?screen_name=" + (encodeURIComponent(screen_name)) + "&include_entities=true&suppress_response_codes=true&callback=?";
+    if (twitter) {
+      return "/api/lookup/" + (encodeURIComponent(screen_name));
+    } else {
+      return "https://api.twitter.com/1/users/lookup.json?screen_name=" + (encodeURIComponent(screen_name)) + "&include_entities=true&suppress_response_codes=true&callback=?";
+    }
   };
 
   favs_url = function(id, page) {
     if (page == null) page = 1;
     if (!id) throw "twitter id is missing.";
     if (twitter) {
-      return "/api/favs/" + id + "/" + page;
+      return "/api/favs/" + (encodeURIComponent(id)) + "/" + page;
     } else {
       return "https://api.twitter.com/1/favorites.json?id=" + (encodeURIComponent(id)) + "&page=" + page + "&count=20&include_entities=true&suppress_response_codes=true&callback=?";
     }
   };
 
-  search_url = function(q, page, rpp) {
+  search_url = function(q, page) {
     if (page == null) page = 1;
-    if (rpp == null) rpp = 100;
     if (!q) throw "search query is missing.";
-    return "http://search.twitter.com/search.json?q=" + (encodeURIComponent(q)) + "&rpp=" + rpp + "&result_type=mixed&include_entities=true&suppress_response_codes=true&callback=?";
+    if (twitter) {
+      return "/api/search/" + (encodeURIComponent(q)) + "/" + page;
+    } else {
+      return "http://search.twitter.com/search.json?q=" + (encodeURIComponent(q)) + "&rpp=100&result_type=mixed&include_entities=true&suppress_response_codes=true&callback=?";
+    }
   };
 
   dateformat = function(d) {

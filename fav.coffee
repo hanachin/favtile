@@ -11,12 +11,26 @@ require("zappa") port, ->
       consumerSecret: "your consumer secret"
       baseURL: "http://localhost:3000"
 
+  @helper needLoggedIn: (callback) ->
+    if @session?.twitter?
+      callback()
+    else
+      "{errors:[{message:'login first to use api.'}]}"
+
+  @get '/api/lookup/:screen_name': ->
+    path = "/users/lookup.json?screen_name=#{encodeURIComponent @params.screen_name}&include_entities=true&suppress_response_codes=true"
+    @needLoggedIn =>
+      twitter.getJSON path, @request, (err, data, response) => @send data
+
+  @get '/api/search/:q/:page': ->
+    path = "/search.json?q=#{encodeURIComponent q}&rpp=100&result_type=mixed&include_entities=true&suppress_response_codes=true"
+    @needLoggedIn =>
+      twitter.getJSON path, @request, (err, data, response) => @send data
+
   @get '/api/favs/:id/:page': ->
     path = "/favorites.json?id=#{encodeURIComponent @params.id}&page=#{@params.page}&count=20&include_entities=true&suppress_response_codes=true"
-    if @session?.twitter?
+    @needLoggedIn =>
       twitter.getJSON path, @request, (err, data, response) => @send data
-    else
-      "#{encodeURIComponent @query.callback}({errors:[{message:'login first to use api.'}]})"
 
   @get '/?:id?': ->
     @render 'index', id: (@params.id ? ""), session: @session
