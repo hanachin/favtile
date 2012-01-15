@@ -1,25 +1,29 @@
 $ = jQuery
 
+twapi_url = (path, params) ->
+  params = ("#{k}=#{encodeURIComponent v}" for own k, v of params).join("&")
+  "https://api.twitter.com/1#{path}.json?include_entities=true&suppress_response_codes=true&#{params}&callback=?"
+
 lookup_url = (screen_name) ->
   throw "screen_name is missing." unless screen_name
   if twitter
     "/api/lookup/#{encodeURIComponent screen_name}"
   else
-    "https://api.twitter.com/1/users/lookup.json?screen_name=#{encodeURIComponent screen_name}&include_entities=true&suppress_response_codes=true&callback=?"
+    twapi_url "/users/lookup", screen_name:screen_name
 
 favs_url = (id, page = 1) ->
   throw "twitter id is missing." unless id
   if twitter
     "/api/favs/#{encodeURIComponent id}/#{page}"
   else
-    "https://api.twitter.com/1/favorites.json?id=#{encodeURIComponent id}&page=#{page}&count=20&include_entities=true&suppress_response_codes=true&callback=?"
+    twapi_url "/favorites", id: id, page: page, count: 20
 
 search_url = (q, page = 1) ->
   throw "search query is missing." unless q
   if twitter
     "/api/search/#{encodeURIComponent q}/#{page}"
   else
-    "http://search.twitter.com/search.json?q=#{encodeURIComponent q}&rpp=100&result_type=mixed&include_entities=true&suppress_response_codes=true&callback=?"
+    twapi_url "/search", q: q, rpp: 100, result_type: "mixed"
 
 dateformat = (d) ->
   date = [d.getFullYear(), d.getMonth() + 1, d.getDate()].join "-"

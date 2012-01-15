@@ -1,15 +1,32 @@
 (function() {
-  var $, Fav, FavtileApp, Search, Tweet, Tweets, dateformat, favs_url, lookup_url, search_url, twapi;
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+  var $, Fav, FavtileApp, Search, Tweet, Tweets, dateformat, favs_url, lookup_url, search_url, twapi, twapi_url;
+  var __hasProp = Object.prototype.hasOwnProperty, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   $ = jQuery;
+
+  twapi_url = function(path, params) {
+    var k, v;
+    params = ((function() {
+      var _results;
+      _results = [];
+      for (k in params) {
+        if (!__hasProp.call(params, k)) continue;
+        v = params[k];
+        _results.push("" + k + "=" + (encodeURIComponent(v)));
+      }
+      return _results;
+    })()).join("&");
+    return "https://api.twitter.com/1" + path + ".json?include_entities=true&suppress_response_codes=true&" + params + "&callback=?";
+  };
 
   lookup_url = function(screen_name) {
     if (!screen_name) throw "screen_name is missing.";
     if (twitter) {
       return "/api/lookup/" + (encodeURIComponent(screen_name));
     } else {
-      return "https://api.twitter.com/1/users/lookup.json?screen_name=" + (encodeURIComponent(screen_name)) + "&include_entities=true&suppress_response_codes=true&callback=?";
+      return twapi_url("/users/lookup", {
+        screen_name: screen_name
+      });
     }
   };
 
@@ -19,7 +36,11 @@
     if (twitter) {
       return "/api/favs/" + (encodeURIComponent(id)) + "/" + page;
     } else {
-      return "https://api.twitter.com/1/favorites.json?id=" + (encodeURIComponent(id)) + "&page=" + page + "&count=20&include_entities=true&suppress_response_codes=true&callback=?";
+      return twapi_url("/favorites", {
+        id: id,
+        page: page,
+        count: 20
+      });
     }
   };
 
@@ -29,7 +50,11 @@
     if (twitter) {
       return "/api/search/" + (encodeURIComponent(q)) + "/" + page;
     } else {
-      return "http://search.twitter.com/search.json?q=" + (encodeURIComponent(q)) + "&rpp=100&result_type=mixed&include_entities=true&suppress_response_codes=true&callback=?";
+      return twapi_url("/search", {
+        q: q,
+        rpp: 100,
+        result_type: "mixed"
+      });
     }
   };
 
