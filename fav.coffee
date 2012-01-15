@@ -11,6 +11,13 @@ require("zappa") port, ->
       consumerSecret: "your consumer secret"
       baseURL: "http://localhost:3000"
 
+  @get '/api/favs/:id/:page': ->
+    path = "/favorites.json?id=#{encodeURIComponent @params.id}&page=#{@params.page}&count=20&include_entities=true&suppress_response_codes=true"
+    if @session?.twitter?
+      twitter.getJSON path, @request, (err, data, response) => @send data
+    else
+      "#{encodeURIComponent @query.callback}({errors:[{message:'login first to use api.'}]})"
+
   @get '/?:id?': ->
     @render 'index', id: (@params.id ? ""), session: @session
 
@@ -38,10 +45,10 @@ require("zappa") port, ->
         script src: '/spine.js', charset: 'utf-8'
         script src: '/local.js', charset: 'utf-8'
         script charset: 'utf-8', ->
-          if @session?.oauth?
-            "oauth = #{JSON.stringify @session.oauth};"
+          if @session?.twitter?
+            "twitter = true"
           else
-            "oauth = {};"
+            "twitter = false"
         script id: 'tweetTemplate', type: 'x-jquery-tmpl', ->
           div class: "item", ->
             a class: "icon_link", href: "/${user.screen_name}", -> img class:"icon", src: "${user.profile_image_url}"

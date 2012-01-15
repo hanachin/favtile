@@ -4,9 +4,12 @@ lookup_url = (screen_name) ->
   throw "screen_name is missing." unless screen_name
   "https://api.twitter.com/1/users/lookup.json?screen_name=#{encodeURIComponent screen_name}&include_entities=true&suppress_response_codes=true&callback=?"
 
-favs_url = (id, page = 1, count = 20) ->
+favs_url = (id, page = 1) ->
   throw "twitter id is missing." unless id
-  "https://api.twitter.com/1/favorites.json?id=#{encodeURIComponent id}&page=#{page}&count=#{count}&include_entities=true&suppress_response_codes=true&callback=?"
+  if twitter
+    "/api/favs/#{id}/#{page}"
+  else
+    "https://api.twitter.com/1/favorites.json?id=#{encodeURIComponent id}&page=#{page}&count=20&include_entities=true&suppress_response_codes=true&callback=?"
 
 search_url = (q, page = 1, rpp = 100) ->
   throw "search query is missing." unless q
@@ -128,6 +131,7 @@ class FavtileApp extends Spine.Controller
 
       # recent 20 favs
       twapi (favs_url @screen_name), (favs) =>
+        console.log "favs"
         Fav.create fav for fav in favs
         if favs.length is 0 then $(@el).find(".loading_footer").text("0 favorites.")
 

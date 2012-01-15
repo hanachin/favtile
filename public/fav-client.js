@@ -9,11 +9,14 @@
     return "https://api.twitter.com/1/users/lookup.json?screen_name=" + (encodeURIComponent(screen_name)) + "&include_entities=true&suppress_response_codes=true&callback=?";
   };
 
-  favs_url = function(id, page, count) {
+  favs_url = function(id, page) {
     if (page == null) page = 1;
-    if (count == null) count = 20;
     if (!id) throw "twitter id is missing.";
-    return "https://api.twitter.com/1/favorites.json?id=" + (encodeURIComponent(id)) + "&page=" + page + "&count=" + count + "&include_entities=true&suppress_response_codes=true&callback=?";
+    if (twitter) {
+      return "/api/favs/" + id + "/" + page;
+    } else {
+      return "https://api.twitter.com/1/favorites.json?id=" + (encodeURIComponent(id)) + "&page=" + page + "&count=20&include_entities=true&suppress_response_codes=true&callback=?";
+    }
   };
 
   search_url = function(q, page, rpp) {
@@ -284,6 +287,7 @@
         $(window).bind("bottom", this.moreFavs);
         twapi(favs_url(this.screen_name), function(favs) {
           var fav, _i, _len;
+          console.log("favs");
           for (_i = 0, _len = favs.length; _i < _len; _i++) {
             fav = favs[_i];
             Fav.create(fav);
