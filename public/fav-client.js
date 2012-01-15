@@ -1,6 +1,6 @@
 (function() {
-  var $, Fav, FavtileApp, Search, Tweet, Tweets, User, dateformat, favs_url, lookup_url, search_url, twapi;
-  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var $, Fav, FavtileApp, Search, Tweet, Tweets, dateformat, favs_url, lookup_url, search_url, twapi;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   $ = jQuery;
 
@@ -59,32 +59,6 @@
       }
     });
   };
-
-  User = (function() {
-
-    __extends(User, Spine.Model);
-
-    function User() {
-      User.__super__.constructor.apply(this, arguments);
-    }
-
-    User.CACHE_TIME = 24 * 60 * 60 * 1000;
-
-    User.configure("User", "screen_name", "profile_image_url", "profile_background_image_url_https", "profile_background_tile", "profile_background_color", "saved_at");
-
-    User.cache = function(screen_name) {
-      var user;
-      user = this.findByAttribute("screen_name", screen_name);
-      if (((new Date).getTime() - User.CACHE_TIME) < (user != null ? user.saved_at : void 0)) {
-        return user;
-      } else {
-        return null;
-      }
-    };
-
-    return User;
-
-  })();
 
   Tweets = (function() {
 
@@ -288,7 +262,6 @@
       Fav.fetch();
       Search.bind("create", this.addSearchOne);
       Search.fetch();
-      User.fetch();
       $(this.items).masonry({
         itemSelector: ".item"
       });
@@ -426,7 +399,7 @@
     };
 
     FavtileApp.prototype.setUserInformation = function() {
-      var set_bg, set_icon, user;
+      var set_bg, set_icon;
       var _this = this;
       set_bg = function(user) {
         return $("body").css({
@@ -444,19 +417,12 @@
         }));
       };
       $(this.screen_name_input).val(this.screen_name);
-      user = User.cache(this.screen_name);
-      if (user) {
+      return twapi(lookup_url(this.screen_name), function(users) {
+        var user;
+        user = users[0];
         set_bg(user);
         return set_icon(user);
-      } else {
-        return twapi(lookup_url(this.screen_name), function(users) {
-          user = users[0];
-          set_bg(user);
-          set_icon(user);
-          user.saved_at = (new Date).getTime();
-          return (User.create(user)).save();
-        });
-      }
+      });
     };
 
     return FavtileApp;

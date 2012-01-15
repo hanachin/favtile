@@ -36,13 +36,6 @@ twapi = (url, callback) ->
     else
       callback json
 
-class User extends Spine.Model
-  @CACHE_TIME: 24 * 60 * 60 * 1000
-  @configure "User", "screen_name", "profile_image_url", "profile_background_image_url_https", "profile_background_tile", "profile_background_color", "saved_at"
-  @cache: (screen_name) ->
-    user = @findByAttribute("screen_name", screen_name)
-    if ((new Date).getTime() - User.CACHE_TIME) < user?.saved_at then user else null
-
 class Tweets extends Spine.Controller
   events:
     "click .fav_button": "fav"
@@ -120,7 +113,6 @@ class FavtileApp extends Spine.Controller
     Fav.fetch()
     Search.bind("create", @addSearchOne)
     Search.fetch()
-    User.fetch()
     $(@items).masonry(itemSelector: ".item")
 
     @screen_name = /^\/(.*)/.exec(location.pathname)?.pop()
@@ -218,17 +210,10 @@ class FavtileApp extends Spine.Controller
       $("header").append $("<img>").attr class:"icon", src:user.profile_image_url
 
     $(@screen_name_input).val @screen_name
-    user = User.cache @screen_name
-    if user
+    twapi (lookup_url @screen_name), (users) ->
+      user = users[0]
       set_bg user
       set_icon user
-    else
-      twapi (lookup_url @screen_name), (users) ->
-        user = users[0]
-        set_bg user
-        set_icon user
-        user.saved_at = (new Date).getTime()
-        (User.create user).save()
 
 $ ->
   new FavtileApp(el: $("#favs"))
