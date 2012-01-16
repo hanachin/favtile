@@ -122,8 +122,6 @@ class Tweet extends Spine.Model
 class FavtileApp extends Spine.Controller
   events:
     "submit form": "userChange"
-    "focus .screen_name_input": "active"
-    "blur .screen_name_input": "inactive"
 
   elements:
     "header .icon": "icon"
@@ -171,19 +169,10 @@ class FavtileApp extends Spine.Controller
         console.log result.results
         Tweet.create t for t in result.results
 
-    @before_data = @screen_name
-    @before_data or= location.hash
-
-  active: =>
-    @screen_name_input.addClass("active")
-
-  inactive: =>
-    @screen_name_input.removeClass("active")
+    @before_data = @screen_name or location.hash
 
   userChange: (e) =>
     e.preventDefault()
-    console.log $(@screen_name_input).val()
-    console.log @before_data
     if $(@screen_name_input).val() isnt @before_data
       location.href = "/#{$(@screen_name_input).val()}"
 

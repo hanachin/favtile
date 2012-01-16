@@ -262,9 +262,7 @@
     __extends(FavtileApp, Spine.Controller);
 
     FavtileApp.prototype.events = {
-      "submit form": "userChange",
-      "focus .screen_name_input": "active",
-      "blur .screen_name_input": "inactive"
+      "submit form": "userChange"
     };
 
     FavtileApp.prototype.elements = {
@@ -281,8 +279,6 @@
       this.moreFavs = __bind(this.moreFavs, this);
       this.addOne = __bind(this.addOne, this);
       this.userChange = __bind(this.userChange, this);
-      this.inactive = __bind(this.inactive, this);
-      this.active = __bind(this.active, this);
       var _ref;
       var _this = this;
       FavtileApp.__super__.constructor.apply(this, arguments);
@@ -339,22 +335,11 @@
           return _results;
         });
       });
-      this.before_data = this.screen_name;
-      this.before_data || (this.before_data = location.hash);
+      this.before_data = this.screen_name || location.hash;
     }
-
-    FavtileApp.prototype.active = function() {
-      return this.screen_name_input.addClass("active");
-    };
-
-    FavtileApp.prototype.inactive = function() {
-      return this.screen_name_input.removeClass("active");
-    };
 
     FavtileApp.prototype.userChange = function(e) {
       e.preventDefault();
-      console.log($(this.screen_name_input).val());
-      console.log(this.before_data);
       if ($(this.screen_name_input).val() !== this.before_data) {
         return location.href = "/" + ($(this.screen_name_input).val());
       }

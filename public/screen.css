@@ -164,10 +164,6 @@ input.screen_name_input {
     font-size: 12px;
 }
 
-.active {
-    color: black;
-}
-
 input.favtile_button {
     position: fixed;
     left: 180px;
