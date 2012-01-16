@@ -1,6 +1,10 @@
 twitter = require "express-twitter"
 
 port = Number(process.env.PORT || 3000)
+baseURL = if process.env.NODE_ENV is "production"
+  "http://favtile.com/"
+else
+  "http://localhost:3000"
 
 require("zappa") port, ->
   @use 'static', 'cookieParser',
@@ -9,7 +13,7 @@ require("zappa") port, ->
     twitter.middleware
       consumerKey: "your consumer key"
       consumerSecret: "your consumer secret"
-      baseURL: "http://localhost:3000"
+      baseURL: baseURL
 
   @helper needLoggedIn: (callback) ->
     if @session?.twitter?
