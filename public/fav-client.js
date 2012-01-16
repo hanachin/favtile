@@ -266,6 +266,7 @@
     };
 
     FavtileApp.prototype.elements = {
+      "header .icon": "icon",
       ".items": "items",
       ".screen_name_input": "screen_name_input",
       ".loading": "loading_img"
@@ -321,20 +322,8 @@
             return $(_this.el).find(".loading_footer").text("end of favotes.");
           }
         });
-        $("header").append($("<a>").attr({
-          href: "/"
-        }).append($("<img>").attr({
-          "class": "icon",
-          src: "favicon73x73.png"
-        })));
       } else {
         $("body").css("background-image", "url('top_background.png')");
-        $("header").append($("<a>").attr({
-          href: "/"
-        }).append($("<img>").attr({
-          "class": "icon",
-          src: "favicon73x73.png"
-        })));
       }
       $(window).bind('hashchange', function() {
         console.log("hash change");
@@ -437,10 +426,9 @@
         });
       };
       set_icon = function(user) {
-        return $("header").append($("<img>").attr({
-          "class": "icon",
+        return $(_this.icon).attr({
           src: user.profile_image_url
-        }));
+        });
       };
       $(this.screen_name_input).val(this.screen_name);
       return twapi(lookup_url(this.screen_name), function(users) {

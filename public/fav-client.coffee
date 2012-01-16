@@ -106,6 +106,7 @@ class FavtileApp extends Spine.Controller
     "blur .screen_name_input": "inactive"
 
   elements:
+    "header .icon": "icon"
     ".items": "items"
     ".screen_name_input": "screen_name_input"
     ".loading": "loading_img"
@@ -140,10 +141,8 @@ class FavtileApp extends Spine.Controller
         console.log result.results
         Search.create t for t in result.results
         if result.results.length is 0 then $(@el).find(".loading_footer").text("end of favotes.")
-      $("header").append $("<a>").attr(href: "/").append $("<img>").attr class:"icon", src:"favicon73x73.png"
     else
       $("body").css("background-image", "url('top_background.png')")
-      $("header").append $("<a>").attr(href: "/").append $("<img>").attr class:"icon", src:"favicon73x73.png"
 
     $(window).bind 'hashchange', =>
       console.log "hash change"
@@ -210,8 +209,8 @@ class FavtileApp extends Spine.Controller
         'background-attachment': "fixed"
         'background-position': "0px 58px"
 
-    set_icon = (user) ->
-      $("header").append $("<img>").attr class:"icon", src:user.profile_image_url
+    set_icon = (user) =>
+      $(@icon).attr src: user.profile_image_url
 
     $(@screen_name_input).val @screen_name
     twapi (lookup_url @screen_name), (users) ->

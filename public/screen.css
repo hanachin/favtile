@@ -14,7 +14,8 @@ body {
     background-position: left top;
 }
 
-header.global {
+.global_header {
+    text-size: 20px;
     position: fixed;
     top: 0px;
     margin: 0px;
@@ -22,22 +23,27 @@ header.global {
     width: 100%;
     background: rgba(0, 0, 0, 0.8);
     color: white;
-    z-index: 100;
+    z-index: 10;
     text-align: center;
     box-shadow: 0px 0px 5px #333;
 }
 
-header.global .logo {
+.global_header h1 {
+    margin: 0px;
+}
+
+.global_header .logo {
     margin: 5px auto auto auto;
 }
 
-header.global img.icon {
+#favs header img.icon {
     position: fixed;
     left: 10px;
     top: 5px;
     width: 48px;
     height: 48px;
     border-radius: 5px;
+    z-index: 11;
 }
 
 div.item {
@@ -219,7 +225,7 @@ input.favtile_button, input.screen_name_input {
     margin: 60px 0px 0px 0px;
 }
 
-#favs footer.loading_footer {
+#favs footer.favs_footer {
     margin-right: auto;
     margin-left: auto;
     text-align: center;
@@ -234,6 +240,7 @@ input.favtile_button, input.screen_name_input {
     top: 30px;
     right: 10px;
     color: #eee;
+    z-index: 11;
 }
 
 .signout {
@@ -241,4 +248,5 @@ input.favtile_button, input.screen_name_input {
     top: 30px;
     right: 10px;
     color: #eee;
+    z-index: 11;
 }
