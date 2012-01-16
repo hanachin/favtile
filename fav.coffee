@@ -3,7 +3,7 @@ csrf = require "express-csrf"
 
 port = Number(process.env.PORT || 3000)
 baseURL = if process.env.NODE_ENV is "production"
-  "http://favtile.com/"
+  "http://favtile.com"
 else
   "http://localhost:3000"
 
