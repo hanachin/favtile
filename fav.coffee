@@ -67,7 +67,7 @@ require("zappa") port, ->
               text "{{else}}"
               img src:"/star_w.png"
               text "{{/if}}"
-              span class:"star", -> "fav"
+              span class:"star", -> "Fav"
             text " | "
             span class: "retweet_button", ->
               text "{{if retweeted}}"
@@ -94,7 +94,7 @@ require("zappa") port, ->
     html ->
       head ->
         meta charset: "utf-8"
-        title "favtile"
+        title "Favtile"
         link rel: 'stylesheet', href: '/screen.css'
         script src: '/jquery-1.7.1.min.js', charset: 'utf-8'
         script src: '/jquery.tmpl.min.js', charset: 'utf-8'
@@ -111,7 +111,7 @@ require("zappa") port, ->
         header class:"global_header", ->
           h1 ->
             a href: "/", ->
-              img class: "logo", alt: "favtile", src: "/logo.png"
+              img class: "logo", alt: "Favtile", src: "/logo.png"
           nav ->
             if @session?.twitter
               a class:"signout", href: "/sessions/logout", -> "Sign out"
