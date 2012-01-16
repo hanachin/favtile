@@ -250,3 +250,18 @@ input.favtile_button, input.screen_name_input {
     color: #eee;
     z-index: 11;
 }
+
+
+.need-signin {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 60px 0px 0px 0px;
+    z-index: 100;
+    background-repeat: no-repeat;
+    background-color: rgba(255, 255, 255, 0.8);
+    background-image: url('/top_background.png');
+    background-position: right top;
+}

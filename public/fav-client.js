@@ -1,5 +1,5 @@
 (function() {
-  var $, Fav, FavtileApp, Search, Tweet, Tweets, favs_url, lookup_url, search_url, twapi, twapi_url;
+  var $, FavtileApp, Tweet, Tweets, favs_url, lookup_url, search_url, twapi, twapi_url;
   var __hasProp = Object.prototype.hasOwnProperty, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   $ = jQuery;
@@ -67,11 +67,11 @@
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           error = _ref[_i];
-          _results.push($("#error").append($("<p>").text("Error: " + error.message)));
+          _results.push($("#error").append($("<p>").text("" + error.message)));
         }
         return _results;
       } else if (json.error != null) {
-        return $("#error").append($("<p>").text("Error: " + json.error));
+        return $("#error").append($("<p>").text("" + json.error));
       } else {
         return callback(json);
       }
@@ -87,9 +87,17 @@
       "click .retweet_button": "retweet"
     };
 
+    Tweets.prototype.elements = {
+      ".fav_button img": "fav_button_img",
+      ".retweet_button img": "retweet_button_img"
+    };
+
     function Tweets() {
-      this.render = __bind(this.render, this);      Tweets.__super__.constructor.apply(this, arguments);
-      this.item.bind("update", this.render);
+      this.render = __bind(this.render, this);
+      this.fav = __bind(this.fav, this);
+      this.twUpdate = __bind(this.twUpdate, this);      Tweets.__super__.constructor.apply(this, arguments);
+      this.item.bind("update", this.twUpdate);
+      this.item.bind("create", this.render);
       this.item.bind("destroy", this.release);
     }
 
@@ -137,11 +145,13 @@
             case "user_mentions":
               return $("<a>").attr({
                 "class": "user_mentions",
+                target: "_self",
                 href: "/" + (encodeURIComponent(e.screen_name))
               }).text(sub);
             case "hashtags":
               return $("<a>").attr({
                 "class": "hashtags",
+                target: "_self",
                 href: "/#" + (encodeURIComponent(e.text))
               }).text(sub);
             case "media":
@@ -180,27 +190,28 @@
       return el;
     };
 
+    Tweets.prototype.twUpdate = function() {
+      $(this.fav_button_img).attr({
+        src: this.item.favorited ? "star.png" : "star_w.png"
+      });
+      return $(this.retweet_button_img).attr({
+        src: this.item.retweeted ? "rt.png" : "rt_w.png"
+      });
+    };
+
     Tweets.prototype.fav = function(e) {
-      if (this.item.favorited) {
-        return $.post("/api/fav_create/" + this.item.id_str, {
-          csrf: csrf
-        }, function(json) {
-          if (!((json.error != null) || (json.errors != null))) {
-            return $(this.fav).attr({
-              src: "/star.png"
-            });
-          }
-        });
+      if (twitter) {
+        if (this.item.favorited) {
+          return this.item.updateAttributes({
+            favorited: false
+          });
+        } else {
+          return this.item.updateAttributes({
+            favorited: true
+          });
+        }
       } else {
-        return $.post("/api/fav_destroy/" + this.item.id_str, {
-          csrf: csrf
-        }, function(json) {
-          if (!((json.error != null) || (json.errors != null))) {
-            return $(this.fav).attr({
-              src: "/star_w.png"
-            });
-          }
-        });
+
       }
     };
 
@@ -219,59 +230,30 @@
   })();
 
   Tweet = (function() {
-    var dateformat;
 
     __extends(Tweet, Spine.Model);
 
-    function Tweet() {
-      this.dateformat = __bind(this.dateformat, this);
-      Tweet.__super__.constructor.apply(this, arguments);
-    }
+    Tweet.configure("Tweet", "user", "text", "entities", "id_str", "created_at", "retweeted", "favorited", "from_user", "profile_image_url");
 
-    dateformat = function(d) {
-      var date, time;
+    Tweet.prototype.dateformat = function() {
+      var d, date, time;
+      d = new Date(this.created_at);
       date = [d.getFullYear(), d.getMonth() + 1, d.getDate()].join("-");
       time = [d.getHours(), d.getMinutes(), d.getSeconds()].join(":");
       return "" + date + " " + time;
     };
 
-    Tweet.prototype.dateformat = function() {
-      return dateformat(new Date(this.created_at));
-    };
+    function Tweet(src) {
+      this.dateformat = __bind(this.dateformat, this);      Tweet.__super__.constructor.call(this, src);
+      if (!this.user) {
+        this.user = {
+          screen_name: this.from_user,
+          profile_image_url: this.profile_image_url
+        };
+      }
+    }
 
     return Tweet;
-
-  })();
-
-  Search = (function() {
-
-    __extends(Search, Tweet);
-
-    Search.configure("Search", "user", "text", "entities", "id_str", "created_at", "retweeted", "favorited", "from_user", "profile_image_url");
-
-    function Search(obj) {
-      Search.__super__.constructor.call(this, obj);
-      this.user = {
-        screen_name: this.from_user,
-        profile_image_url: this.profile_image_url
-      };
-    }
-
-    return Search;
-
-  })();
-
-  Fav = (function() {
-
-    __extends(Fav, Tweet);
-
-    function Fav() {
-      Fav.__super__.constructor.apply(this, arguments);
-    }
-
-    Fav.configure("Tweet", "user", "text", "entities", "id_str", "created_at", "retweeted", "favorited");
-
-    return Fav;
 
   })();
 
@@ -289,7 +271,8 @@
       "header .icon": "icon",
       ".items": "items",
       ".screen_name_input": "screen_name_input",
-      ".loading": "loading_img"
+      ".loading": "loading_img",
+      ".favs_footer": "favs_footer"
     };
 
     function FavtileApp() {
@@ -297,7 +280,6 @@
       this.setSearchInformation = __bind(this.setSearchInformation, this);
       this.moreFavs = __bind(this.moreFavs, this);
       this.addOne = __bind(this.addOne, this);
-      this.addSearchOne = __bind(this.addSearchOne, this);
       this.userChange = __bind(this.userChange, this);
       this.inactive = __bind(this.inactive, this);
       this.active = __bind(this.active, this);
@@ -305,10 +287,8 @@
       var _this = this;
       FavtileApp.__super__.constructor.apply(this, arguments);
       console.log("constructor of FavtileApp");
-      Fav.bind("create", this.addOne);
-      Fav.fetch();
-      Search.bind("create", this.addSearchOne);
-      Search.fetch();
+      Tweet.bind("create", this.addOne);
+      Tweet.fetch();
       $(this.items).masonry({
         itemSelector: ".item"
       });
@@ -322,11 +302,9 @@
           console.log("favs");
           for (_i = 0, _len = favs.length; _i < _len; _i++) {
             fav = favs[_i];
-            Fav.create(fav);
+            Tweet.create(fav);
           }
-          if (favs.length === 0) {
-            return $(_this.el).find(".loading_footer").text("0 favorites.");
-          }
+          if (favs.length === 0) return $(_this.favs_footer).text("0 favorites.");
         });
       } else if (location.hash) {
         $(this.screen_name_input).val(decodeURIComponent(location.hash));
@@ -336,10 +314,10 @@
           _ref2 = result.results;
           for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
             t = _ref2[_i];
-            Search.create(t);
+            Tweet.create(t);
           }
           if (result.results.length === 0) {
-            return $(_this.el).find(".loading_footer").text("end of favotes.");
+            return $(_this.favs_footer).text("end of favotes.");
           }
         });
       } else {
@@ -347,7 +325,7 @@
       }
       $(window).bind('hashchange', function() {
         console.log("hash change");
-        Search.destroyAll();
+        Tweet.destroyAll();
         $(_this.screen_name_input).val(decodeURIComponent(location.hash));
         return twapi(search_url(location.hash), function(result) {
           var t, _i, _len, _ref2, _results;
@@ -356,7 +334,7 @@
           _results = [];
           for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
             t = _ref2[_i];
-            _results.push(Search.create(t));
+            _results.push(Tweet.create(t));
           }
           return _results;
         });
@@ -380,16 +358,6 @@
       if ($(this.screen_name_input).val() !== this.before_data) {
         return location.href = "/" + ($(this.screen_name_input).val());
       }
-    };
-
-    FavtileApp.prototype.addSearchOne = function(search) {
-      var el, view;
-      view = new Tweets({
-        item: search
-      });
-      el = view.render().el;
-      this.items.append(el);
-      return $(this.items).masonry("appended", el).masonry('reload');
     };
 
     FavtileApp.prototype.addOne = function(fav) {
@@ -419,11 +387,11 @@
           if (favs.length !== 0) {
             for (_i = 0, _len = favs.length; _i < _len; _i++) {
               fav = favs[_i];
-              Fav.create(fav);
+              Tweet.create(fav);
             }
             return _this.loading = false;
           } else {
-            return console.log(_this.el.find(".loading_footer").text("end of favotes."));
+            return $(_this.favs_footer).text("end of favotes.");
           }
         });
       }
