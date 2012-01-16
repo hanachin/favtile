@@ -181,7 +181,27 @@
     };
 
     Tweets.prototype.fav = function(e) {
-      return console.log(this.item.id_str);
+      if (this.item.favorited) {
+        return $.post("/api/fav_create/" + this.item.id_str, {
+          csrf: csrf
+        }, function(json) {
+          if (!((json.error != null) || (json.errors != null))) {
+            return $(this.fav).attr({
+              src: "/star.png"
+            });
+          }
+        });
+      } else {
+        return $.post("/api/fav_destroy/" + this.item.id_str, {
+          csrf: csrf
+        }, function(json) {
+          if (!((json.error != null) || (json.errors != null))) {
+            return $(this.fav).attr({
+              src: "/star_w.png"
+            });
+          }
+        });
+      }
     };
 
     Tweets.prototype.retweet = function(e) {

@@ -39,6 +39,7 @@ class Tweets extends Spine.Controller
   events:
     "click .fav_button": "fav"
     "click .retweet_button": "retweet"
+
   constructor: ->
     super
     @item.bind("update", @render)
@@ -72,7 +73,14 @@ class Tweets extends Spine.Controller
     el
 
   fav: (e) ->
-    console.log @item.id_str
+    if @item.favorited
+      $.post "/api/fav_create/#{@item.id_str}", csrf: csrf, (json) ->
+        unless json.error? or json.errors?
+          $(@fav).attr src: "/star.png"
+    else
+      $.post "/api/fav_destroy/#{@item.id_str}", csrf: csrf, (json) ->
+        unless json.error? or json.errors?
+          $(@fav).attr src: "/star_w.png"
 
   retweet: (e) ->
     console.log @item.id_str

@@ -1,4 +1,5 @@
 twitter = require "express-twitter"
+csrf = require "express-csrf"
 
 port = Number(process.env.PORT || 3000)
 baseURL = if process.env.NODE_ENV is "production"
@@ -7,8 +8,9 @@ else
   "http://localhost:3000"
 
 require("zappa") port, ->
-  @use 'static', 'cookieParser',
+  @use 'static', 'cookieParser', 'bodyParser'
     session: { secret: "kwae3n2j2nbjsduzhua2" }
+    csrf.check()
     basicAuth:((u, p) -> u is 'hanachin' and p is 'zxcvbnm'),
     twitter.middleware
       consumerKey: "your consumer key"
@@ -20,6 +22,18 @@ require("zappa") port, ->
       callback()
     else
       '{"error":"login first to use api."}'
+
+  @app.dynamicHelpers csrf: csrf.token
+
+  @post '/api/fav_create/:id': ->
+    @needLoggedIn =>
+      path = "/favorites/create/#{encodeURIComponent @params.id}.json?include_entities=true&suppress_response_codes=true"
+      twitter.postJSON path, '', @request, (err, data, response) => @send data
+
+  @post '/api/fav_destroy/:id': ->
+    @needLoggedIn =>
+      path = "/favorites/create/#{encodeURIComponent @params.id}.json?suppress_response_codes=true"
+      twitter.postJSON path, '', @request, (err, data, response) => @send data
 
   @get '/api/lookup/:screen_name': ->
     path = "/users/lookup.json?screen_name=#{encodeURIComponent @params.screen_name}&include_entities=true&suppress_response_codes=true"
@@ -89,9 +103,10 @@ require("zappa") port, ->
         script src: '/spine.js', charset: 'utf-8'
         script charset: 'utf-8', ->
           if @session?.twitter?
-            "twitter = true"
+            text "twitter = true;"
           else
-            "twitter = false"
+            text "twitter = false;"
+          text "csrf=\"#{@csrf}\";"
       body ->
         header class:"global_header", ->
           h1 ->

@@ -4,6 +4,7 @@
   "dependencies": {
     "zappa": "0.3.3",
     "coffee-script":"1.1.3",
-    "express-twitter":"0.0.1"
+    "express-twitter":"0.0.1",
+    "express-csrf":"0.3.4"
   }
 }
