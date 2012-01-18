@@ -8,15 +8,17 @@ else
   "http://localhost:3000"
 
 require("zappa") port, ->
-  @use 'static', 'cookieParser', 'bodyParser'
+  @use
+    basicAuth:((u, p) -> u is 'hanachin' and p is 'zxcvbnm')
+    'bodyParser'
+    'cookieParser'
     session: { secret: "kwae3n2j2nbjsduzhua2" }
     csrf.check()
-    basicAuth:((u, p) -> u is 'hanachin' and p is 'zxcvbnm'),
     twitter.middleware
       consumerKey: "your consumer key"
       consumerSecret: "your consumer secret"
       baseURL: baseURL
-
+    'static'
   @helper needLoggedIn: (callback) ->
     if @session?.twitter?
       callback()
