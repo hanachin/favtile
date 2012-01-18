@@ -317,7 +317,7 @@
           }
         });
       } else {
-        $("body").css("background-image", "url('top_background.png')");
+        $("body").addClass("top_background");
       }
       $(window).bind('hashchange', function() {
         console.log("hash change");

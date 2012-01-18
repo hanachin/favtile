@@ -159,7 +159,7 @@ class FavtileApp extends Spine.Controller
         Tweet.create t for t in result.results
         if result.results.length is 0 then $(@favs_footer).text("end of favotes.")
     else
-      $("body").css("background-image", "url('top_background.png')")
+      $("body").addClass("top_background")
 
     $(window).bind 'hashchange', =>
       console.log "hash change"

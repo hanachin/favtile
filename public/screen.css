@@ -9,9 +9,6 @@
 body {
     margin: 0px;
     padding: 0px;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    background-position: left top;
 }
 
 .global_header {
@@ -250,6 +247,14 @@ input.favtile_button, input.screen_name_input {
     z-index: 11;
 }
 
+
+.top_background {
+    background-attachment: fixed, fixed;
+    background-repeat: no-repeat, no-repeat;
+    background-color: rgba(255, 255, 255, 0.8), rgba(0,0,0,0);
+    background-image: url('/top_background.png'), url('/screen01.png');
+    background-position: left top, right top;
+}
 
 .need-signin {
     height: 100%;
