@@ -116,11 +116,13 @@ require("zappa") port, ->
         title "Favtile"
         link rel: 'stylesheet', href: '/screen.css'
         link rel: 'stylesheet', href: '/jquery.meow.css'
+        link rel: 'stylesheet', href: '/fancybox/jquery.fancybox-1.3.4.css'
         script src: '/jquery-1.7.1.min.js', charset: 'utf-8'
         script src: '/jquery.tmpl.min.js', charset: 'utf-8'
         script src: '/jquery.bottom-1.0.js', charset: 'utf-8'
         script src: '/jquery.masonry.min.js', charset: 'utf-8'
         script src: '/jquery.meow.js', charset: 'utf-8'
+        script src: '/fancybox/jquery.fancybox-1.3.4.pack.js', charset: 'utf-8'
         script src: '/spine.js', charset: 'utf-8'
         script charset: 'utf-8', ->
           if @session?.twitter?

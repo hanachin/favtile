@@ -67,7 +67,9 @@
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           error = _ref[_i];
-          _results.push($("#error").append($("<p>").text("" + error.message)));
+          if (error.code !== 17) {
+            _results.push($("#error").append($("<p>").text("" + error.message)));
+          }
         }
         return _results;
       } else if (json.error != null) {
@@ -108,7 +110,7 @@
     }
 
     Tweets.prototype.decorate = function(item) {
-      var e, el, entities, m, media, pos, sizes, sub, t, text, v, values, _i, _j, _k, _len, _len2, _len3;
+      var a, e, el, entities, img, m, media, pos, sizes, sub, t, text, v, values, _i, _j, _k, _len, _len2, _len3;
       text = item.text, entities = item.entities;
       for (t in entities) {
         if (!__hasProp.call(entities, t)) continue;
@@ -188,10 +190,14 @@
           width: m.sizes.thumb.w,
           height: m.sizes.thumb.h
         };
-        el.append($("<img>").attr({
+        a = $("<a>").attr({
+          href: "" + m.media_url + ":large"
+        }).fancybox();
+        img = $("<img>").attr({
           "class": "media",
           src: "" + m.media_url + ":thumb"
-        }).css(sizes));
+        }).css(sizes);
+        el.append(a.append(img));
       }
       return el;
     };

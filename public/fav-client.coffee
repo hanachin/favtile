@@ -29,7 +29,7 @@ twapi = (url, callback) ->
   $.getJSON url, (json) ->
     console.log json
     if json.errors?
-      $("#error").append $("<p>").text "#{error.message}" for error in json.errors
+      $("#error").append $("<p>").text "#{error.message}" for error in json.errors when error.code isnt 17
     else if json.error?
       $("#error").append $("<p>").text "#{json.error}"
     else
@@ -77,7 +77,9 @@ class Tweets extends Spine.Controller
     media = (e for e in entities when e.type is "media")
     for m in media
       sizes = width: m.sizes.thumb.w, height: m.sizes.thumb.h
-      el.append $("<img>").attr(class: "media", src: "#{m.media_url}:thumb").css(sizes)
+      a = $("<a>").attr(href: "#{m.media_url}:large").fancybox()
+      img = $("<img>").attr(class: "media", src: "#{m.media_url}:thumb").css(sizes)
+      el.append a.append img
     el
 
   twUpdate: =>
