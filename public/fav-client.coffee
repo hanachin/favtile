@@ -35,6 +35,9 @@ twapi = (url, callback) ->
     else
       callback json
 
+twapi_post = (url, callback) ->
+  $.post url, csrf: csrf, callback
+
 class Tweets extends Spine.Controller
   events:
     "click .fav_button": "fav"
@@ -85,21 +88,65 @@ class Tweets extends Spine.Controller
     if twitter
       if @item.favorited
         @item.updateAttributes favorited: false
-        # $.post "/api/fav_destroy/#{@item.id_str}", csrf: csrf, (json) ->
-        #   console.log json
-        #   unless json.error? or json.errors?
-        #     @item.updateAttributes favorited: false
+        twapi_post "/api/fav_destroy/#{@item.id_str}", (json) =>
+          unless json.error? or json.errors?
+            $.meow
+              title: "removed favorite."
+              message: @item.text
+          else
+            @item.updateAttributes favorited: true
+            $.meow message: "failed to remove favorite."
       else
         @item.updateAttributes favorited: true
-        # $.post "/api/fav_create/#{@item.id_str}", csrf: csrf, (json) =>
-        #   console.log json
-        #   unless json.error? or json.errors?
-        #     @item.updateAttributes favorited: true
+        twapi_post "/api/fav_create/#{@item.id_str}", (json) =>
+          unless json.error? or json.errors?
+            $.meow
+              title: "success to add favorite."
+              message: @item.text
+              icon: @item.user.profile_image_url
+          else
+            @item.updateAttributes favorited: false
+            $.meow message: "failed to add favorite."
     else
-      # $("body").append $("<div>").addClass "need-signin"
+      $.meow
+        icon: "/favicon73x73.png"
+        sticky: true
+        message: "Please sign in to add or remove favorites."
 
   retweet: (e) ->
-    console.log @item.id_str
+    if twitter
+      if @item.retweeted
+        @item.updateAttributes retweeted: false
+        twapi "/api/statuses/retweeted_by_me", (retweets) =>
+          retweet = rt for rt in retweets when rt.retweeted_status.id_str is @item.id_str
+          if retweet
+            twapi_post "/api/rt_destroy/#{retweet.id_str}", (json) =>
+              console.log json
+              unless json.error? or json.errors?
+                $.meow message: "cancel retweet."
+              else
+                @item.updateAttributes retweeted: true
+                $.meow message: "failed to cancel retweet."
+          else
+            @item.updateAttributes retweeted: true
+            $.meow message: "failed to cancel retweet."
+      else
+        @item.updateAttributes retweeted: true
+        twapi_post "/api/rt_create/#{@item.id_str}", (json) =>
+          console.log json
+          unless json.error? or json.errors?
+            $.meow
+              title: "success to retweet."
+              message: @item.text
+              icon: @item.user.profile_image_url
+          else
+            @item.updateAttributes retweeted: false
+            $.meow message: "failed to retweet."
+    else
+      $.meow
+        icon: "/favicon73x73.png"
+        sticky: true
+        message: "Please sign in to retweet."
 
   render: =>
     @replace($("#tweetTemplate").tmpl(@item))

@@ -32,8 +32,23 @@ require("zappa") port, ->
 
   @post '/api/fav_destroy/:id': ->
     @needLoggedIn =>
-      path = "/favorites/create/#{encodeURIComponent @params.id}.json?suppress_response_codes=true"
+      path = "/favorites/destroy/#{encodeURIComponent @params.id}.json?suppress_response_codes=true"
       twitter.postJSON path, '', @request, (err, data, response) => @send data
+
+  @post '/api/rt_create/:id': ->
+    @needLoggedIn =>
+      path = "/statuses/retweet/#{encodeURIComponent @params.id}.json?include_entities=true&suppress_response_codes=true"
+      twitter.postJSON path, '', @request, (err, data, response) => @send data
+
+  @post '/api/rt_destroy/:id': ->
+    @needLoggedIn =>
+      path = "/statuses/destroy/#{encodeURIComponent @params.id}.json?suppress_response_codes=true"
+      twitter.postJSON path, '', @request, (err, data, response) => @send data
+
+  @get '/api/statuses/retweeted_by_me': ->
+    @needLoggedIn =>
+      path = "/statuses/retweeted_by_me.json?count=100&include_entities=true&suppress_response_codes=true"
+      twitter.getJSON path, @request, (err, data, response) => @send data
 
   @get '/api/lookup/:screen_name': ->
     path = "/users/lookup.json?screen_name=#{encodeURIComponent @params.screen_name}&include_entities=true&suppress_response_codes=true"
@@ -100,10 +115,12 @@ require("zappa") port, ->
         meta charset: "utf-8"
         title "Favtile"
         link rel: 'stylesheet', href: '/screen.css'
+        link rel: 'stylesheet', href: '/jquery.meow.css'
         script src: '/jquery-1.7.1.min.js', charset: 'utf-8'
         script src: '/jquery.tmpl.min.js', charset: 'utf-8'
         script src: '/jquery.bottom-1.0.js', charset: 'utf-8'
         script src: '/jquery.masonry.min.js', charset: 'utf-8'
+        script src: '/jquery.meow.js', charset: 'utf-8'
         script src: '/spine.js', charset: 'utf-8'
         script charset: 'utf-8', ->
           if @session?.twitter?

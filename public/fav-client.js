@@ -1,5 +1,5 @@
 (function() {
-  var $, FavtileApp, Tweet, Tweets, favs_url, lookup_url, search_url, twapi, twapi_url;
+  var $, FavtileApp, Tweet, Tweets, favs_url, lookup_url, search_url, twapi, twapi_post, twapi_url;
   var __hasProp = Object.prototype.hasOwnProperty, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   $ = jQuery;
@@ -76,6 +76,12 @@
         return callback(json);
       }
     });
+  };
+
+  twapi_post = function(url, callback) {
+    return $.post(url, {
+      csrf: csrf
+    }, callback);
   };
 
   Tweets = (function() {
@@ -200,23 +206,124 @@
     };
 
     Tweets.prototype.fav = function(e) {
+      var _this = this;
       if (twitter) {
         if (this.item.favorited) {
-          return this.item.updateAttributes({
+          this.item.updateAttributes({
             favorited: false
           });
+          return twapi_post("/api/fav_destroy/" + this.item.id_str, function(json) {
+            if (!((json.error != null) || (json.errors != null))) {
+              return $.meow({
+                title: "removed favorite.",
+                message: _this.item.text
+              });
+            } else {
+              _this.item.updateAttributes({
+                favorited: true
+              });
+              return $.meow({
+                message: "failed to remove favorite."
+              });
+            }
+          });
         } else {
-          return this.item.updateAttributes({
+          this.item.updateAttributes({
             favorited: true
+          });
+          return twapi_post("/api/fav_create/" + this.item.id_str, function(json) {
+            if (!((json.error != null) || (json.errors != null))) {
+              return $.meow({
+                title: "success to add favorite.",
+                message: _this.item.text,
+                icon: _this.item.user.profile_image_url
+              });
+            } else {
+              _this.item.updateAttributes({
+                favorited: false
+              });
+              return $.meow({
+                message: "failed to add favorite."
+              });
+            }
           });
         }
       } else {
-
+        return $.meow({
+          icon: "/favicon73x73.png",
+          sticky: true,
+          message: "Please sign in to add or remove favorites."
+        });
       }
     };
 
     Tweets.prototype.retweet = function(e) {
-      return console.log(this.item.id_str);
+      var _this = this;
+      if (twitter) {
+        if (this.item.retweeted) {
+          this.item.updateAttributes({
+            retweeted: false
+          });
+          return twapi("/api/statuses/retweeted_by_me", function(retweets) {
+            var retweet, rt, _i, _len;
+            for (_i = 0, _len = retweets.length; _i < _len; _i++) {
+              rt = retweets[_i];
+              if (rt.retweeted_status.id_str === _this.item.id_str) retweet = rt;
+            }
+            if (retweet) {
+              return twapi_post("/api/rt_destroy/" + retweet.id_str, function(json) {
+                console.log(json);
+                if (!((json.error != null) || (json.errors != null))) {
+                  return $.meow({
+                    message: "cancel retweet."
+                  });
+                } else {
+                  _this.item.updateAttributes({
+                    retweeted: true
+                  });
+                  return $.meow({
+                    message: "failed to cancel retweet."
+                  });
+                }
+              });
+            } else {
+              _this.item.updateAttributes({
+                retweeted: true
+              });
+              return $.meow({
+                message: "failed to cancel retweet."
+              });
+            }
+          });
+        } else {
+          this.item.updateAttributes({
+            retweeted: true
+          });
+          return twapi_post("/api/rt_create/" + this.item.id_str, function(json) {
+            console.log(json);
+            if (!((json.error != null) || (json.errors != null))) {
+              return $.meow({
+                title: "success to retweet.",
+                message: _this.item.text,
+                icon: _this.item.user.profile_image_url
+              });
+            } else {
+              _this.item.updateAttributes({
+                retweeted: false
+              });
+              return $.meow({
+                message: "failed to retweet."
+              });
+            }
+          });
+        }
+      } else {
+        return $.meow({
+          icon: "/favicon73x73.png",
+          sticky: true,
+          message: "Please sign in to retweet."
+        });
+      }
     };
 
     Tweets.prototype.render = function() {
