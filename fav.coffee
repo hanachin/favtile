@@ -67,7 +67,7 @@ require("zappa") port, ->
               text "{{else}}"
               img src:"/star_w.png"
               text "{{/if}}"
-              span class:"star", -> "Fav"
+              span class:"star", -> "fav"
             text " | "
             span class: "retweet_button", ->
               text "{{if retweeted}}"
@@ -76,7 +76,11 @@ require("zappa") port, ->
               img src:"/rt_w.png"
               text "{{/if}}"
               span class:"rt", -> "RT"
-          a class: "status", href: "http://twitter.com/${user.screen_name}/statuses/${id_str}", -> "${dateformat()}"
+            text " | "
+            span class: "user_button", ->
+              a href: "http://twitter.com/${user.screen_name}", target:"_blank", ->
+                img src:"/user.png"
+                span class:"user", -> "user"
     script src: '/fav-client.js', charset: 'utf-8'
     div id: "favs", ->
       header ->
@@ -113,10 +117,11 @@ require("zappa") port, ->
             a href: "/", ->
               img class: "logo", alt: "Favtile", src: "/logo.png"
           nav ->
-            if @session?.twitter
-              a class:"signout", href: "/sessions/logout", -> "Sign out"
-            else
-              a class:"signin", href: "/sessions/login", -> "Sign in with Twitter"
+            if @id isnt ""
+              if @session?.twitter
+                a class:"signout", href: "/sessions/logout", -> "Sign out"
+              else
+                a class:"signin", href: "/sessions/login", -> "Sign in with Twitter"
         div class: "content", ->
           @body
         footer class: "global_footer", ->
