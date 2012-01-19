@@ -169,4 +169,9 @@ require("zappa") port, ->
         div class:"top_background", ->
           img src: "top_background.png"
         footer class: "global_footer", ->
+          a href:"https://twitter.com/share", class:"twitter-share-button", "data-via":"hanachin_", "data-size":"large", ->
+            text "Tweet"
+          script charset: 'utf-8', ->
+            text "!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");"
+          text " "
           div class:"fb-like", "data-href":"http://favtile.com/", "data-send":"true", "data-width":"450", "data-show-faces":"false"
