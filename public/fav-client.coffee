@@ -208,7 +208,7 @@ class FavtileApp extends Spine.Controller
         Tweet.create t for t in result.results
         if result.results.length is 0 then $(@favs_footer).text("end of favotes.")
     else
-      $("body").addClass("top_background")
+      $(".top_background").css display: "block"
 
     $(window).bind 'hashchange', =>
       console.log "hash change"

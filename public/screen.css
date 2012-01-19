@@ -249,11 +249,12 @@ input.favtile_button, input.screen_name_input {
 
 
 .top_background {
-    background-attachment: fixed, fixed;
-    background-repeat: no-repeat, no-repeat;
-    background-color: rgba(255, 255, 255, 0.8), rgba(0,0,0,0);
-    background-image: url('/top_background.png'), url('/screen01.png');
-    background-position: left top, right top;
+    display: none;
+    /* background-attachment: fixed, fixed; */
+    /* background-repeat: no-repeat, no-repeat; */
+    /* background-color: rgba(255, 255, 255, 0.8), rgba(0,0,0,0); */
+    /* background-image: url('/top_background.png'), url('/screen01.png'); */
+    /* background-position: left top, right top; */
 }
 
 .need-signin {
@@ -268,4 +269,8 @@ input.favtile_button, input.screen_name_input {
     background-color: rgba(255, 255, 255, 0.8);
     background-image: url('/top_background.png');
     background-position: right top;
+}
+
+.global_footer {
+    text-align: right;
 }

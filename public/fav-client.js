@@ -430,7 +430,9 @@
           }
         });
       } else {
-        $("body").addClass("top_background");
+        $(".top_background").css({
+          display: "block"
+        });
       }
       $(window).bind('hashchange', function() {
         console.log("hash change");

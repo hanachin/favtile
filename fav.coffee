@@ -166,5 +166,7 @@ require("zappa") port, ->
 
         div class: "content", ->
           @body
+        div class:"top_background", ->
+          img src: "top_background.png"
         footer class: "global_footer", ->
-          div class:"fb-like", "data-href":"http://favtile.com/", "data-send":"false", "data-layout":"button_count", "data-width":"90", "data-show-faces":"true"
+          div class:"fb-like", "data-href":"http://favtile.com/", "data-send":"true", "data-width":"450", "data-show-faces":"false"
