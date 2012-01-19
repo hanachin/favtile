@@ -49,7 +49,8 @@ class Tweets extends Spine.Controller
 
   constructor: ->
     super
-    @item.bind("loading", @twLoading)
+    @item.bind("loading_fav", @twLoadingFav)
+    @item.bind("loading_rt", @twLoadingRt)
     @item.bind("update", @twUpdate)
     @item.bind("create", @render)
     @item.bind("destroy", @release)
@@ -83,8 +84,11 @@ class Tweets extends Spine.Controller
       el.append a.append img
     el
 
-  twLoading: =>
+  twLoadingFav: =>
     $(@fav_button_img).attr src: "/tim.gif"
+
+  twLoadingRt: =>
+    $(@retweet_button_img).attr src: "/tim.gif"
 
   twUpdate: =>
     $(@fav_button_img).attr src: if @item.favorited then "star.png" else "star_w.png"
@@ -92,7 +96,7 @@ class Tweets extends Spine.Controller
 
   fav: (e) =>
     if twitter
-      @item.trigger "loading"
+      @item.trigger "loading_fav"
       if @item.favorited
         twapi_post "/api/fav_destroy/#{@item.id_str}", (json) =>
           unless json.error? or json.errors?
@@ -121,7 +125,7 @@ class Tweets extends Spine.Controller
 
   retweet: (e) ->
     if twitter
-      @item.trigger "loading"
+      @item.trigger "loading_rt"
       if @item.retweeted
         twapi "/api/statuses/retweeted_by_me", (retweets) =>
           retweet = rt for rt in retweets when rt.retweeted_status.id_str is @item.id_str

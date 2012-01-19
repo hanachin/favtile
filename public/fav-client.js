@@ -104,8 +104,10 @@
       this.render = __bind(this.render, this);
       this.fav = __bind(this.fav, this);
       this.twUpdate = __bind(this.twUpdate, this);
-      this.twLoading = __bind(this.twLoading, this);      Tweets.__super__.constructor.apply(this, arguments);
-      this.item.bind("loading", this.twLoading);
+      this.twLoadingRt = __bind(this.twLoadingRt, this);
+      this.twLoadingFav = __bind(this.twLoadingFav, this);      Tweets.__super__.constructor.apply(this, arguments);
+      this.item.bind("loading_fav", this.twLoadingFav);
+      this.item.bind("loading_rt", this.twLoadingRt);
       this.item.bind("update", this.twUpdate);
       this.item.bind("create", this.render);
       this.item.bind("destroy", this.release);
@@ -204,8 +206,14 @@
       return el;
     };
 
-    Tweets.prototype.twLoading = function() {
+    Tweets.prototype.twLoadingFav = function() {
       return $(this.fav_button_img).attr({
+        src: "/tim.gif"
+      });
+    };
+
+    Tweets.prototype.twLoadingRt = function() {
+      return $(this.retweet_button_img).attr({
         src: "/tim.gif"
       });
     };
@@ -222,7 +230,7 @@
     Tweets.prototype.fav = function(e) {
       var _this = this;
       if (twitter) {
-        this.item.trigger("loading");
+        this.item.trigger("loading_fav");
         if (this.item.favorited) {
           return twapi_post("/api/fav_destroy/" + this.item.id_str, function(json) {
             if (!((json.error != null) || (json.errors != null))) {
@@ -274,7 +282,7 @@
     Tweets.prototype.retweet = function(e) {
       var _this = this;
       if (twitter) {
-        this.item.trigger("loading");
+        this.item.trigger("loading_rt");
         if (this.item.retweeted) {
           return twapi("/api/statuses/retweeted_by_me", function(retweets) {
             var retweet, rt, _i, _len;
