@@ -458,7 +458,6 @@
           console.log("favs");
           for (_i = 0, _len = favs.length; _i < _len; _i++) {
             fav = favs[_i];
-            console.log("unko");
             Tweet.create(fav);
           }
           if (favs.length === 0) {

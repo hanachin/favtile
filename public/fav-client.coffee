@@ -232,7 +232,6 @@ class FavtileApp extends Spine.Controller
       twapi (favs_url @screen_name), (favs) =>
         console.log "favs"
         for fav in favs
-          console.log "unko"
           Tweet.create fav
         if favs.length is 0 then $(@favs_footer).append "0 favorites."
 
