@@ -115,6 +115,13 @@ require("zappa") port, ->
     html ->
       head ->
         meta charset: "utf-8"
+        meta content:'Favtile', property:'og:site_name'
+        meta content:'Favtile', property:'og:title'
+        meta content:'Favtile maximize your twitter favorite activity.', property:'og:description'
+        meta content:'http://favtile.com/?id=1', property:'og:url'
+        meta content:'http://favtile.com/thumb.png', property:'og:image'
+        meta content:'website', property:'og:type'
+        meta content:'hanachin', property:'fb:admins'
         title "Favtile"
         link rel: 'stylesheet', href: '/screen.css'
         link rel: 'stylesheet', href: '/jquery.meow.css'
@@ -126,6 +133,7 @@ require("zappa") port, ->
         script src: '/jquery.meow.js', charset: 'utf-8'
         script src: '/fancybox/jquery.fancybox-1.3.4.pack.js', charset: 'utf-8'
         script src: '/spine.js', charset: 'utf-8'
+        script id: 'facebook-jssdk', src:'http://connect.facebook.net/ja_JP/all.js#xfbml=1'
         coffeescript ->
           _gaq = _gaq or []
           _gaq.push [ "_setAccount", "UA-28457578-1" ]
@@ -155,6 +163,8 @@ require("zappa") port, ->
                 a class:"signout", href: "/sessions/logout", -> "Sign out"
               else
                 a class:"signin", href: "/sessions/login", -> "Sign in with Twitter"
+
         div class: "content", ->
           @body
         footer class: "global_footer", ->
+          div class:"fb-like", "data-href":"http://favtile.com/", "data-send":"false", "data-layout":"button_count", "data-width":"90", "data-show-faces":"true"
