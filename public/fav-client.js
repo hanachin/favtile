@@ -59,7 +59,7 @@
   };
 
   twapi = function(url, callback) {
-    return $.getJSON(url, function(json) {
+    return ($.getJSON(url, function(json) {
       var error, _i, _len, _ref, _results;
       console.log(json);
       if (json.errors != null) {
@@ -77,13 +77,17 @@
       } else {
         return callback(json);
       }
+    })).error(function() {
+      return $("#error").append($("<p>").text("loading error occurred. please refresh this page."));
     });
   };
 
   twapi_post = function(url, callback) {
-    return $.post(url, {
+    return ($.post(url, {
       csrf: csrf
-    }, callback);
+    }, callback)).error(function() {
+      return $("#error").append($("<p>").text("loading error occurred. please refresh this page."));
+    });
   };
 
   Tweets = (function() {
@@ -496,7 +500,7 @@
         console.log("bottom");
         this.loading = true;
         $(this.loading_img).toggle();
-        return twapi(favs_url(this.screen_name, ++this.page), function(favs) {
+        return (twapi(favs_url(this.screen_name, ++this.page), function(favs) {
           var fav, _i, _len;
           console.log("load");
           $(_this.loading_img).toggle();
@@ -509,6 +513,8 @@
           } else {
             return $(_this.favs_footer).text("end of favotes.");
           }
+        })).error(function() {
+          return $(_this.loading_img).toggle();
         });
       }
     };

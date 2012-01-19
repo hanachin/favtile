@@ -26,17 +26,20 @@ search_url = (q, page = 1) ->
     twapi_url "/search", q: q, rpp: 100, result_type: "mixed"
 
 twapi = (url, callback) ->
-  $.getJSON url, (json) ->
+  ($.getJSON url, (json) ->
     console.log json
     if json.errors?
       $("#error").append $("<p>").text "#{error.message}" for error in json.errors when error.code isnt 17
     else if json.error?
       $("#error").append $("<p>").text "#{json.error}"
     else
-      callback json
+      callback json).error ->
+        $("#error").append $("<p>").text "loading error occurred. please refresh this page."
 
 twapi_post = (url, callback) ->
-  $.post url, csrf: csrf, callback
+  ($.post url, csrf: csrf, callback).error ->
+    $("#error").append $("<p>").text "loading error occurred. please refresh this page."
+
 
 class Tweets extends Spine.Controller
   events:
@@ -247,14 +250,16 @@ class FavtileApp extends Spine.Controller
       console.log "bottom"
       @loading = true
       $(@loading_img).toggle()
-      twapi (favs_url @screen_name, ++@page), (favs) =>
+      (twapi (favs_url @screen_name, ++@page), (favs) =>
         console.log "load"
         $(@loading_img).toggle()
         if favs.length isnt 0
           Tweet.create fav for fav in favs
           @loading = false
         else
-          $(@favs_footer).text("end of favotes.")
+          $(@favs_footer).text("end of favotes.")).error =>
+            $(@loading_img).toggle()
+
 
   setSearchInformation: =>
     $(@screen_name_input).val decodeURIComponent location.hash
