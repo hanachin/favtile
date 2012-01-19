@@ -103,7 +103,9 @@
     function Tweets() {
       this.render = __bind(this.render, this);
       this.fav = __bind(this.fav, this);
-      this.twUpdate = __bind(this.twUpdate, this);      Tweets.__super__.constructor.apply(this, arguments);
+      this.twUpdate = __bind(this.twUpdate, this);
+      this.twLoading = __bind(this.twLoading, this);      Tweets.__super__.constructor.apply(this, arguments);
+      this.item.bind("loading", this.twLoading);
       this.item.bind("update", this.twUpdate);
       this.item.bind("create", this.render);
       this.item.bind("destroy", this.release);
@@ -202,6 +204,12 @@
       return el;
     };
 
+    Tweets.prototype.twLoading = function() {
+      return $(this.fav_button_img).attr({
+        src: "/tim.gif"
+      });
+    };
+
     Tweets.prototype.twUpdate = function() {
       $(this.fav_button_img).attr({
         src: this.item.favorited ? "star.png" : "star_w.png"
@@ -214,12 +222,13 @@
     Tweets.prototype.fav = function(e) {
       var _this = this;
       if (twitter) {
+        this.item.trigger("loading");
         if (this.item.favorited) {
-          this.item.updateAttributes({
-            favorited: false
-          });
           return twapi_post("/api/fav_destroy/" + this.item.id_str, function(json) {
             if (!((json.error != null) || (json.errors != null))) {
+              _this.item.updateAttributes({
+                favorited: false
+              });
               return $.meow({
                 title: "removed favorite.",
                 message: _this.item.text
@@ -234,11 +243,11 @@
             }
           });
         } else {
-          this.item.updateAttributes({
-            favorited: true
-          });
           return twapi_post("/api/fav_create/" + this.item.id_str, function(json) {
             if (!((json.error != null) || (json.errors != null))) {
+              _this.item.updateAttributes({
+                favorited: true
+              });
               return $.meow({
                 title: "success to add favorite.",
                 message: _this.item.text,
@@ -257,7 +266,6 @@
       } else {
         return $.meow({
           icon: "/favicon73x73.png",
-          sticky: true,
           message: "Please sign in to add or remove favorites."
         });
       }
@@ -266,10 +274,8 @@
     Tweets.prototype.retweet = function(e) {
       var _this = this;
       if (twitter) {
+        this.item.trigger("loading");
         if (this.item.retweeted) {
-          this.item.updateAttributes({
-            retweeted: false
-          });
           return twapi("/api/statuses/retweeted_by_me", function(retweets) {
             var retweet, rt, _i, _len;
             for (_i = 0, _len = retweets.length; _i < _len; _i++) {
@@ -280,6 +286,9 @@
               return twapi_post("/api/rt_destroy/" + retweet.id_str, function(json) {
                 console.log(json);
                 if (!((json.error != null) || (json.errors != null))) {
+                  _this.item.updateAttributes({
+                    retweeted: false
+                  });
                   return $.meow({
                     message: "cancel retweet."
                   });
@@ -302,12 +311,12 @@
             }
           });
         } else {
-          this.item.updateAttributes({
-            retweeted: true
-          });
           return twapi_post("/api/rt_create/" + this.item.id_str, function(json) {
             console.log(json);
             if (!((json.error != null) || (json.errors != null))) {
+              _this.item.updateAttributes({
+                retweeted: true
+              });
               return $.meow({
                 title: "success to retweet.",
                 message: _this.item.text,
@@ -326,7 +335,6 @@
       } else {
         return $.meow({
           icon: "/favicon73x73.png",
-          sticky: true,
           message: "Please sign in to retweet."
         });
       }

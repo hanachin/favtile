@@ -49,6 +49,7 @@ class Tweets extends Spine.Controller
 
   constructor: ->
     super
+    @item.bind("loading", @twLoading)
     @item.bind("update", @twUpdate)
     @item.bind("create", @render)
     @item.bind("destroy", @release)
@@ -82,16 +83,20 @@ class Tweets extends Spine.Controller
       el.append a.append img
     el
 
+  twLoading: =>
+    $(@fav_button_img).attr src: "/tim.gif"
+
   twUpdate: =>
     $(@fav_button_img).attr src: if @item.favorited then "star.png" else "star_w.png"
     $(@retweet_button_img).attr src: if @item.retweeted then "rt.png" else "rt_w.png"
 
   fav: (e) =>
     if twitter
+      @item.trigger "loading"
       if @item.favorited
-        @item.updateAttributes favorited: false
         twapi_post "/api/fav_destroy/#{@item.id_str}", (json) =>
           unless json.error? or json.errors?
+            @item.updateAttributes favorited: false
             $.meow
               title: "removed favorite."
               message: @item.text
@@ -99,9 +104,9 @@ class Tweets extends Spine.Controller
             @item.updateAttributes favorited: true
             $.meow message: "failed to remove favorite."
       else
-        @item.updateAttributes favorited: true
         twapi_post "/api/fav_create/#{@item.id_str}", (json) =>
           unless json.error? or json.errors?
+            @item.updateAttributes favorited: true
             $.meow
               title: "success to add favorite."
               message: @item.text
@@ -112,19 +117,19 @@ class Tweets extends Spine.Controller
     else
       $.meow
         icon: "/favicon73x73.png"
-        sticky: true
         message: "Please sign in to add or remove favorites."
 
   retweet: (e) ->
     if twitter
+      @item.trigger "loading"
       if @item.retweeted
-        @item.updateAttributes retweeted: false
         twapi "/api/statuses/retweeted_by_me", (retweets) =>
           retweet = rt for rt in retweets when rt.retweeted_status.id_str is @item.id_str
           if retweet
             twapi_post "/api/rt_destroy/#{retweet.id_str}", (json) =>
               console.log json
               unless json.error? or json.errors?
+                @item.updateAttributes retweeted: false
                 $.meow message: "cancel retweet."
               else
                 @item.updateAttributes retweeted: true
@@ -133,10 +138,10 @@ class Tweets extends Spine.Controller
             @item.updateAttributes retweeted: true
             $.meow message: "failed to cancel retweet."
       else
-        @item.updateAttributes retweeted: true
         twapi_post "/api/rt_create/#{@item.id_str}", (json) =>
           console.log json
           unless json.error? or json.errors?
+            @item.updateAttributes retweeted: true
             $.meow
               title: "success to retweet."
               message: @item.text
@@ -147,7 +152,6 @@ class Tweets extends Spine.Controller
     else
       $.meow
         icon: "/favicon73x73.png"
-        sticky: true
         message: "Please sign in to retweet."
 
   render: =>
