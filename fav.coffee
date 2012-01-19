@@ -8,8 +8,7 @@ else
   "http://localhost:3000"
 
 require("zappa") port, ->
-  @use
-    'static'
+  @use 'static',
     basicAuth:((u, p) -> u is 'hanachin' and p is 'zxcvbnm')
     'bodyParser'
     'cookieParser'
