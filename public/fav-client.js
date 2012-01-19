@@ -60,23 +60,20 @@
 
   twapi = function(url, callback) {
     return ($.getJSON(url, function(json) {
-      var error, _i, _len, _ref, _results;
+      var error, _i, _len, _ref;
       console.log(json);
       if (json.errors != null) {
         _ref = json.errors;
-        _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           error = _ref[_i];
           if (error.code !== 17) {
-            _results.push($("#error").append($("<p>").text("" + error.message)));
+            $("#error").append($("<p>").text("" + error.message));
           }
         }
-        return _results;
       } else if (json.error != null) {
-        return $("#error").append($("<p>").text("" + json.error));
-      } else {
-        return callback(json);
+        $("#error").append($("<p>").text("" + json.error));
       }
+      return callback(json);
     })).error(function() {
       return $("#error").append($("<p>").text("loading error occurred. please refresh this page."));
     });
@@ -433,7 +430,9 @@
             fav = favs[_i];
             Tweet.create(fav);
           }
-          if (favs.length === 0) return $(_this.favs_footer).text("0 favorites.");
+          if (favs.length === 0) {
+            return $(_this.favs_footer).append("0 favorites.");
+          }
         });
       } else if (location.hash) {
         $(this.screen_name_input).val(decodeURIComponent(location.hash));
@@ -446,7 +445,7 @@
             Tweet.create(t);
           }
           if (result.results.length === 0) {
-            return $(_this.favs_footer).text("end of favotes.");
+            return $(_this.favs_footer).append("end of favotes.");
           }
         });
       } else {
@@ -500,21 +499,21 @@
         console.log("bottom");
         this.loading = true;
         $(this.loading_img).toggle();
-        return (twapi(favs_url(this.screen_name, ++this.page), function(favs) {
+        return twapi(favs_url(this.screen_name, ++this.page), function(favs) {
           var fav, _i, _len;
           console.log("load");
           $(_this.loading_img).toggle();
-          if (favs.length !== 0) {
+          if ((favs.error != null) || (favs.errors != null)) {
+            return "";
+          } else if (favs.length !== 0) {
             for (_i = 0, _len = favs.length; _i < _len; _i++) {
               fav = favs[_i];
               Tweet.create(fav);
             }
             return _this.loading = false;
           } else {
-            return $(_this.favs_footer).text("end of favotes.");
+            return $(_this.favs_footer).append("end of favotes.");
           }
-        })).error(function() {
-          return $(_this.loading_img).toggle();
         });
       }
     };

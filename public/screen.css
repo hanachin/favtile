@@ -218,7 +218,12 @@ input.favtile_button, input.screen_name_input {
 }
 
 #error {
-    margin: 60px 0px 0px 0px;
+    color: white;
+    text-shadow: 1px 1px 3px red;
+    width: 200px;
+    margin: 80px auto 0px auto;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
 }
 
 #favs footer.favs_footer {

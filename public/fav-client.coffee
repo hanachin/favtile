@@ -32,9 +32,8 @@ twapi = (url, callback) ->
       $("#error").append $("<p>").text "#{error.message}" for error in json.errors when error.code isnt 17
     else if json.error?
       $("#error").append $("<p>").text "#{json.error}"
-    else
-      callback json).error ->
-        $("#error").append $("<p>").text "loading error occurred. please refresh this page."
+    callback json).error ->
+      $("#error").append $("<p>").text "loading error occurred. please refresh this page."
 
 twapi_post = (url, callback) ->
   ($.post url, csrf: csrf, callback).error ->
@@ -210,14 +209,14 @@ class FavtileApp extends Spine.Controller
       twapi (favs_url @screen_name), (favs) =>
         console.log "favs"
         Tweet.create fav for fav in favs
-        if favs.length is 0 then $(@favs_footer).text("0 favorites.")
+        if favs.length is 0 then $(@favs_footer).append "0 favorites."
 
     else if location.hash
       $(@screen_name_input).val decodeURIComponent location.hash
       twapi (search_url location.hash), (result) =>
         console.log result.results
         Tweet.create t for t in result.results
-        if result.results.length is 0 then $(@favs_footer).text("end of favotes.")
+        if result.results.length is 0 then $(@favs_footer).append "end of favotes."
     else
       $(".top_background").css display: "block"
 
@@ -250,15 +249,15 @@ class FavtileApp extends Spine.Controller
       console.log "bottom"
       @loading = true
       $(@loading_img).toggle()
-      (twapi (favs_url @screen_name, ++@page), (favs) =>
+      twapi (favs_url @screen_name, ++@page), (favs) =>
         console.log "load"
         $(@loading_img).toggle()
-        if favs.length isnt 0
+        if favs.error? or favs.errors? then ""
+        else if favs.length isnt 0
           Tweet.create fav for fav in favs
           @loading = false
         else
-          $(@favs_footer).text("end of favotes.")).error =>
-            $(@loading_img).toggle()
+          $(@favs_footer).append "end of favotes."
 
 
   setSearchInformation: =>
