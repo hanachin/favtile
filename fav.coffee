@@ -9,6 +9,7 @@ else
 
 require("zappa") port, ->
   @use
+    'static'
     basicAuth:((u, p) -> u is 'hanachin' and p is 'zxcvbnm')
     'bodyParser'
     'cookieParser'
@@ -18,7 +19,6 @@ require("zappa") port, ->
       consumerKey: "your consumer key"
       consumerSecret: "your consumer secret"
       baseURL: baseURL
-    'static'
   @helper needLoggedIn: (callback) ->
     if @session?.twitter?
       callback()
