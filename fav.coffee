@@ -126,6 +126,9 @@ require("zappa") port, ->
         link rel: 'stylesheet', href: '/screen.css'
         link rel: 'stylesheet', href: '/jquery.meow.css'
         link rel: 'stylesheet', href: '/fancybox/jquery.fancybox-1.3.4.css'
+        text "<!--[if lt IE 9]>"
+        script src: '/html5.js', charset: 'utf-8'
+        text "<![endif]-->"
         script src: '/jquery-1.7.1.min.js', charset: 'utf-8'
         script src: '/jquery.tmpl.min.js', charset: 'utf-8'
         script src: '/jquery.bottom-1.0.js', charset: 'utf-8'

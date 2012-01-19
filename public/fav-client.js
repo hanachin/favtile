@@ -2,6 +2,33 @@
   var $, FavtileApp, Tweet, Tweets, favs_url, lookup_url, search_url, twapi, twapi_post, twapi_url;
   var __hasProp = Object.prototype.hasOwnProperty, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
+  if (!Array.prototype.reduce) {
+    Array.prototype.reduce = function(fun) {
+      var i, len, rv;
+      len = this.length;
+      if (typeof fun !== "function") throw new TypeError();
+      if (len === 0 && arguments.length === 1) throw new TypeError();
+      i = 0;
+      if (arguments.length >= 2) {
+        rv = arguments[1];
+      } else {
+        while (true) {
+          if (i in this) {
+            rv = this[i++];
+            break;
+          }
+          if (++i >= len) throw new TypeError();
+          if (!true) break;
+        }
+      }
+      while (i < len) {
+        if (i in this) rv = fun.call(null, rv, this[i], i, this);
+        i++;
+      }
+      return rv;
+    };
+  }
+
   $ = jQuery;
 
   twapi_url = function(path, params) {
@@ -374,13 +401,16 @@
     };
 
     function Tweet(src) {
-      this.dateformat = __bind(this.dateformat, this);      Tweet.__super__.constructor.call(this, src);
+      this.dateformat = __bind(this.dateformat, this);      console.log("before src");
+      Tweet.__super__.constructor.call(this, src);
+      console.log("after src");
       if (!this.user) {
         this.user = {
           screen_name: this.from_user,
           profile_image_url: this.profile_image_url
         };
       }
+      console.log("cons");
     }
 
     return Tweet;
@@ -428,6 +458,7 @@
           console.log("favs");
           for (_i = 0, _len = favs.length; _i < _len; _i++) {
             fav = favs[_i];
+            console.log("unko");
             Tweet.create(fav);
           }
           if (favs.length === 0) {

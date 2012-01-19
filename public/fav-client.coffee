@@ -1,3 +1,23 @@
+unless Array::reduce
+  Array::reduce = (fun) ->
+    len = @length
+    throw new TypeError()  unless typeof fun is "function"
+    throw new TypeError()  if len is 0 and arguments.length is 1
+    i = 0
+    if arguments.length >= 2
+      rv = arguments[1]
+    else
+      loop
+        if i of this
+          rv = this[i++]
+          break
+        throw new TypeError()  if ++i >= len
+        break unless true
+    while i < len
+      rv = fun.call(null, rv, this[i], i, this)  if i of this
+      i++
+    rv
+
 $ = jQuery
 
 twapi_url = (path, params) ->
@@ -175,8 +195,11 @@ class Tweet extends Spine.Model
     "#{date} #{time}"
 
   constructor: (src) ->
+    console.log "before src"
     super src
+    console.log "after src"
     unless @user then @user = screen_name: @from_user, profile_image_url: @profile_image_url
+    console.log "cons"
 
 class FavtileApp extends Spine.Controller
   events:
@@ -208,7 +231,9 @@ class FavtileApp extends Spine.Controller
       # recent 20 favs
       twapi (favs_url @screen_name), (favs) =>
         console.log "favs"
-        Tweet.create fav for fav in favs
+        for fav in favs
+          console.log "unko"
+          Tweet.create fav
         if favs.length is 0 then $(@favs_footer).append "0 favorites."
 
     else if location.hash

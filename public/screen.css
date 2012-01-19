@@ -1,4 +1,7 @@
 /* http://kojika17.com/2011/04/floatclearfix.php */
+img {
+    border: 0px;
+}
 .clearfix {zoom:1;}
 .clearfix:after {
     content: "";
@@ -18,11 +21,13 @@ body {
     margin: 0px;
     height: 58px;
     width: 100%;
+    background: rgb(0, 0, 0);
     background: rgba(0, 0, 0, 0.8);
     color: white;
     z-index: 10;
     text-align: center;
     box-shadow: 0px 0px 5px #333;
+    behavior: url('PIE.htc');
 }
 
 .global_header h1 {
@@ -41,6 +46,7 @@ body {
     height: 48px;
     border-radius: 5px;
     z-index: 11;
+    behavior: url('PIE.htc');
 }
 
 div.item {
@@ -48,9 +54,11 @@ div.item {
     padding: 5px 10px;
     word-wrap: break-word;
     width: 210px;
+    background: rgb(255, 255, 255);
     background: rgba(255, 255, 255, 0.85);
     box-shadow: 0px 0px 5px #000;
     font-size: 14px;
+    behavior: url('PIE.htc');
 }
 
 .item a {
@@ -103,6 +111,7 @@ div.item {
 	text-shadow:
 		0px -1px 1px rgba(228,228,228,0.2),
 		0px 1px 0px rgba(255,255,255,0.3);
+    behavior: url('PIE.htc');
 }
 
 .item .tools {
@@ -139,6 +148,7 @@ div.item img.icon {
     width: 48px;
     height: 48px;
     float: left;
+    behavior: url('PIE.htc');
 }
 
 div.item img.media {
@@ -211,6 +221,7 @@ input.favtile_button, input.screen_name_input {
 	text-shadow:
 		0px -1px 0px rgba(000,000,000,0.2),
 		0px 1px 0px rgba(255,255,255,1);
+    behavior: url('PIE.htc');
 }
 
 #favs {
@@ -222,8 +233,10 @@ input.favtile_button, input.screen_name_input {
     text-shadow: 1px 1px 3px red;
     width: 200px;
     margin: 80px auto 0px auto;
+    background: rgb(0, 0, 0);
     background: rgba(0, 0, 0, 0.8);
     border-radius: 10px;
+    behavior: url('PIE.htc');
 }
 
 #favs footer.favs_footer {
@@ -237,6 +250,7 @@ input.favtile_button, input.screen_name_input {
     background: black;
     border-radius: 10px;
     padding: 10px 15px 10px 10px;
+    behavior: url('PIE.htc');
 }
 
 .signin {
@@ -273,10 +287,8 @@ input.favtile_button, input.screen_name_input {
     right: 0;
     margin: 60px 0px 0px 0px;
     z-index: 100;
-    background-repeat: no-repeat;
-    background-color: rgba(255, 255, 255, 0.8);
-    background-image: url('/top_background.png');
-    background-position: right top;
+    background: rgb(255, 255, 255);
+    background: url('/top_background.png'), rgba(255, 255, 255, 0.8), right top, no-repeat;
 }
 
 .global_footer {
