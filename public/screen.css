@@ -234,6 +234,9 @@ input.favtile_button, input.screen_name_input {
 
 .loading {
     display: none;
+    background: black;
+    border-radius: 10px;
+    padding: 10px 15px 10px 10px;
 }
 
 .signin {
