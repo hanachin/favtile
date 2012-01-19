@@ -97,7 +97,6 @@ require("zappa") port, ->
               a href: "http://twitter.com/${user.screen_name}", target:"_blank", ->
                 img src:"/user.png"
                 span class:"user", -> "user"
-    script src: '/fav-client.js', charset: 'utf-8'
     div id: "favs", ->
       header ->
         img class:"icon", src:"/favicon73x73.png"
@@ -128,32 +127,6 @@ require("zappa") port, ->
         text "<!--[if lt IE 9]>"
         script src: '/html5.js', charset: 'utf-8'
         text "<![endif]-->"
-        script src: '/jquery-1.7.1.min.js', charset: 'utf-8'
-        script src: '/jquery.tmpl.min.js', charset: 'utf-8'
-        script src: '/jquery.bottom-1.0.js', charset: 'utf-8'
-        script src: '/jquery.masonry.min.js', charset: 'utf-8'
-        script src: '/jquery.meow.js', charset: 'utf-8'
-        script src: '/fancybox/jquery.fancybox-1.3.4.pack.js', charset: 'utf-8'
-        script src: '/spine.js', charset: 'utf-8'
-        script id: 'facebook-jssdk', src:'http://connect.facebook.net/ja_JP/all.js#xfbml=1'
-        coffeescript ->
-          _gaq = _gaq or []
-          _gaq.push [ "_setAccount", "UA-28457578-1" ]
-          _gaq.push [ "_trackPageview" ]
-          do ->
-            ga = document.createElement("script")
-            ga.type = "text/javascript"
-            ga.async = true
-            ga.src = (if "https:" is document.location.protocol then "https://ssl" else "http://www") + ".google-analytics.com/ga.js"
-            s = document.getElementsByTagName("script")[0]
-            s.parentNode.insertBefore ga, s
-
-        script charset: 'utf-8', ->
-          if @session?.twitter?
-            text "twitter = true;"
-          else
-            text "twitter = false;"
-          text "csrf=\"#{@csrf}\";"
       body ->
         header class:"global_header", ->
           h1 ->
@@ -177,3 +150,30 @@ require("zappa") port, ->
             text "!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");"
           text " "
           div class:"fb-like", "data-href":"http://favtile.com/", "data-send":"true", "data-width":"450", "data-show-faces":"false"
+        script src: '/jquery-1.7.1.min.js', charset: 'utf-8'
+        script src: '/jquery.tmpl.min.js', charset: 'utf-8'
+        script src: '/jquery.bottom-1.0.js', charset: 'utf-8'
+        script src: '/jquery.masonry.min.js', charset: 'utf-8'
+        script src: '/jquery.meow.js', charset: 'utf-8'
+        script src: '/fancybox/jquery.fancybox-1.3.4.pack.js', charset: 'utf-8'
+        script src: '/spine.js', charset: 'utf-8'
+        script id: 'facebook-jssdk', src:'http://connect.facebook.net/ja_JP/all.js#xfbml=1'
+        script src: '/fav-client.js', charset: 'utf-8'
+        coffeescript ->
+          _gaq = _gaq or []
+          _gaq.push [ "_setAccount", "UA-28457578-1" ]
+          _gaq.push [ "_trackPageview" ]
+          do ->
+            ga = document.createElement("script")
+            ga.type = "text/javascript"
+            ga.async = true
+            ga.src = (if "https:" is document.location.protocol then "https://ssl" else "http://www") + ".google-analytics.com/ga.js"
+            s = document.getElementsByTagName("script")[0]
+            s.parentNode.insertBefore ga, s
+
+        script charset: 'utf-8', ->
+          if @session?.twitter?
+            text "twitter = true;"
+          else
+            text "twitter = false;"
+          text "csrf=\"#{@csrf}\";"
