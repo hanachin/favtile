@@ -72,40 +72,40 @@ require("zappa") port, ->
   @view index: ->
     script id: 'tweetTemplate', type: 'x-jquery-tmpl', ->
       div class: "item", ->
-        a class: "icon_link", href: "/${user.screen_name}", -> img class:"icon", src: "${user.profile_image_url}"
+        a class: "icon_link", href: "/${user.screen_name}", -> img class:"icon", src: "${user.profile_image_url}", alt:"${user.screen_name} icon"
         a class: "screen_name", href: "/${user.screen_name}", -> "${user.screen_name}"
         p class: "item_content", ->
         footer class:"item_footer", ->
           div class: "tools", ->
             span class: "fav_button", ->
               text "{{if favorited}}"
-              img src:"/star.png"
+              img src:"/star.png", alt:"favorited"
               text "{{else}}"
-              img src:"/star_w.png"
+              img src:"/star_w.png", alt:"No favorite yet."
               text "{{/if}}"
               span class:"star", -> "fav"
             text " | "
             span class: "retweet_button", ->
               text "{{if retweeted}}"
-              img src:"/rt.png"
+              img src:"/rt.png", alt:"retweeted"
               text "{{else}}"
-              img src:"/rt_w.png"
+              img src:"/rt_w.png", alt:"No retweet yet."
               text "{{/if}}"
               span class:"rt", -> "RT"
             text " | "
             span class: "user_button", ->
               a href: "http://twitter.com/${user.screen_name}", target:"_blank", ->
-                img src:"/user.png"
+                img src:"/user.png", alt:"Jump to twitter user page"
                 span class:"user", -> "user"
     div id: "favs", ->
       header ->
-        img class:"icon", src:"/favicon73x73.png"
+        img class:"icon", src:"/favicon73x73.png", alt:"user icon"
         form ->
           input class:"screen_name_input", type: 'text'
           input class:"favtile_button", type: 'submit', value: "favtile!"
       div class: 'items'
       footer class: "favs_footer", ->
-        img class:"loading", src: "ajax-loader.gif"
+        img class:"loading", src: "ajax-loader.gif", alt:"Now loading..."
         p id:"error"
 
   @view layout: ->
@@ -142,7 +142,7 @@ require("zappa") port, ->
         div class: "content", ->
           @body
         div class:"top_background", ->
-          img src: "top_background.png"
+          img src: "top_background.png", alt: "Enter your twitter ID"
         footer class: "global_footer", ->
           a href:"https://twitter.com/share", class:"twitter-share-button", "data-via":"hanachin_", "data-size":"large", ->
             text "Tweet"
