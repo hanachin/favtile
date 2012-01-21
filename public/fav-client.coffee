@@ -128,13 +128,13 @@ class Tweets extends Spine.Controller
               message: @item.text
           else
             @item.updateAttributes favorited: true
-            $.meow message: "failed to remove favorite."
+            $.meow message: "failed to remove favorite tweet."
       else
         twapi_post "/api/fav_create/#{@item.id_str}", (json) =>
           unless json.error? or json.errors?
             @item.updateAttributes favorited: true
             $.meow
-              title: "success to add favorite."
+              title: "success to add favorite tweet."
               message: @item.text
               icon: @item.user.profile_image_url
           else
@@ -143,7 +143,7 @@ class Tweets extends Spine.Controller
     else
       $.meow
         icon: "/favicon73x73.png"
-        message: "Please sign in to add or remove favorites."
+        message: "Please sign in to add or remove favorite tweets."
 
   retweet: (e) ->
     if twitter
@@ -178,7 +178,7 @@ class Tweets extends Spine.Controller
     else
       $.meow
         icon: "/favicon73x73.png"
-        message: "Please sign in to retweet."
+        message: "Please sign in to retweet this tweet."
 
   render: =>
     @replace($("#tweetTemplate").tmpl(@item))
@@ -232,15 +232,15 @@ class FavtileApp extends Spine.Controller
       twapi (favs_url @screen_name), (favs) =>
         console.log "favs"
         for fav in favs
-          Tweet.create fav
-        if favs.length is 0 then $(@favs_footer).append "0 favorites."
+          Tweet.create if
+        fav favs.length is 0 then $(@favs_footer).append "There is no favorite tweet of #{@screen_name}."
 
     else if location.hash
       $(@screen_name_input).val decodeURIComponent location.hash
       twapi (search_url location.hash), (result) =>
         console.log result.results
         Tweet.create t for t in result.results
-        if result.results.length is 0 then $(@favs_footer).append "end of favotes."
+        if result.results.length is 0 then $(@favs_footer).append "There are no tweets about ##{@location.hash}"
     else
       $(".top_background").css display: "block"
 
@@ -281,7 +281,7 @@ class FavtileApp extends Spine.Controller
           Tweet.create fav for fav in favs
           @loading = false
         else
-          $(@favs_footer).append "end of favotes."
+          $(@favs_footer).append "There are no more favorite tweets of #{@screen_name}."
 
 
   setSearchInformation: =>

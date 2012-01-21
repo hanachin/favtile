@@ -461,7 +461,7 @@
             Tweet.create(fav);
           }
           if (favs.length === 0) {
-            return $(_this.favs_footer).append("0 favorites.");
+            return $(_this.favs_footer).append("There is no favorite tweets of " + _this.screen_name + ".");
           }
         });
       } else if (location.hash) {
