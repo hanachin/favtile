@@ -138,18 +138,26 @@ require("zappa") port, ->
                 a class:"signout", href: "/sessions/logout", -> "Sign out"
               else
                 a class:"signin", href: "/sessions/login", -> "Sign in with Twitter"
-
+          div class:"social_buttons", ->
+            a href:"https://twitter.com/share", class:"twitter-share-button", "data-via":"hanachin_", "data-count":"vertical", ->
+              text "Tweet"
+            script charset: 'utf-8', ->
+              text "!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");"
+            text " "
+            div class:"g-plusone", "data-size":"tall"
+            text " "
+            div
+              class:"fb-like"
+              "data-href":"http://favtile.com/"
+              "data-send":"false"
+              "data-width":"70"
+              "data-show-faces":"true"
+              "data-layout":"box_count"
         div class: "content", ->
           @body
         div class:"top_background", ->
           img src: "top_background.png", alt: "Enter your twitter ID"
         footer class: "global_footer", ->
-          a href:"https://twitter.com/share", class:"twitter-share-button", "data-via":"hanachin_", "data-size":"large", ->
-            text "Tweet"
-          script charset: 'utf-8', ->
-            text "!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");"
-          text " "
-          div class:"fb-like", "data-href":"http://favtile.com/", "data-send":"true", "data-width":"450", "data-show-faces":"false"
         script src: '/jquery-1.7.1.min.js', charset: 'utf-8'
         script src: '/jquery.tmpl.min.js', charset: 'utf-8'
         script src: '/jquery.bottom-1.0.js', charset: 'utf-8'
@@ -159,6 +167,7 @@ require("zappa") port, ->
         script src: '/spine.js', charset: 'utf-8'
         script id: 'facebook-jssdk', src:'http://connect.facebook.net/ja_JP/all.js#xfbml=1'
         script src: '/fav-client.js', charset: 'utf-8'
+
         coffeescript ->
           _gaq = _gaq or []
           _gaq.push [ "_setAccount", "UA-28457578-1" ]
@@ -170,6 +179,15 @@ require("zappa") port, ->
             ga.src = (if "https:" is document.location.protocol then "https://ssl" else "http://www") + ".google-analytics.com/ga.js"
             s = document.getElementsByTagName("script")[0]
             s.parentNode.insertBefore ga, s
+
+        coffeescript ->
+          do ->
+            po = document.createElement("script")
+            po.type = "text/javascript"
+            po.async = true
+            po.src = "https://apis.google.com/js/plusone.js"
+            s = document.getElementsByTagName("script")[0]
+            s.parentNode.insertBefore po, s
 
         script charset: 'utf-8', ->
           if @session?.twitter?

@@ -19,7 +19,7 @@ body {
     position: fixed;
     top: 0px;
     margin: 0px;
-    height: 58px;
+    height: 67px;
     width: 100%;
     background: rgb(0, 0, 0);
     background: rgba(0, 0, 0, 0.8);
@@ -35,13 +35,13 @@ body {
 }
 
 .global_header .logo {
-    margin: 5px auto auto auto;
+    margin: 10px auto auto auto;
 }
 
 #favs header img.icon {
     position: fixed;
     left: 10px;
-    top: 5px;
+    top: 10px;
     width: 48px;
     height: 48px;
     border-radius: 5px;
@@ -169,7 +169,7 @@ div.item footer.item_footer {
 input.screen_name_input {
     position: fixed;
     left: 63px;
-    top: 20px;
+    top: 25px;
     width: 100px;
     font-size: 12px;
 }
@@ -177,7 +177,7 @@ input.screen_name_input {
 input.favtile_button {
     position: fixed;
     left: 180px;
-    top: 21px;
+    top: 26px;
     width: 80px;
 }
 
@@ -225,7 +225,7 @@ input.favtile_button, input.screen_name_input {
 }
 
 #favs {
-    margin: 60px 0px 0px 0px;
+    margin: 68px 0px 0px 0px;
 }
 
 #error {
@@ -253,22 +253,22 @@ input.favtile_button, input.screen_name_input {
     behavior: url('PIE.htc');
 }
 
+.signin, .signout {
+    top: 37px;
+    right: 200px;
+}
+
 .signin {
     position: fixed;
-    top: 30px;
-    right: 10px;
     color: #eee;
     z-index: 11;
 }
 
 .signout {
     position: fixed;
-    top: 30px;
-    right: 10px;
     color: #eee;
     z-index: 11;
 }
-
 
 .top_background {
     display: none;
@@ -293,5 +293,18 @@ input.favtile_button, input.screen_name_input {
 
 .global_footer {
     text-align: right;
-    margin-bottom: 200px;
+}
+
+.social_buttons {
+    position:absolute;
+    right: 5px;
+    top: 0px;
+}
+
+.fb-like {
+    top: -3px;
+}
+
+.twitter-share-button {
+    margin-top: 4px;
 }
