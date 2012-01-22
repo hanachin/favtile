@@ -163,7 +163,7 @@ class Tweets extends Spine.Controller
           else
             @item.updateAttributes retweeted: true
             $.meow message: "failed to cancel retweet."
-      else
+      else if confirm "Retweet this to your followers?"
         twapi_post "/api/rt_create/#{@item.id_str}", (json) =>
           console.log json
           unless json.error? or json.errors?

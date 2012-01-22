@@ -346,7 +346,7 @@
               });
             }
           });
-        } else {
+        } else if (confirm("Retweet this to your followers?")) {
           return twapi_post("/api/rt_create/" + this.item.id_str, function(json) {
             console.log(json);
             if (!((json.error != null) || (json.errors != null))) {
