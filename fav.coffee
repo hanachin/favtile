@@ -18,6 +18,8 @@ require("zappa") port, ->
       consumerKey: "your consumer key"
       consumerSecret: "your consumer secret"
       baseURL: baseURL
+      afterLogin: "/redirect/"
+
   @helper needLoggedIn: (callback) ->
     if @session?.twitter?
       callback()
@@ -66,7 +68,11 @@ require("zappa") port, ->
     @needLoggedIn =>
       twitter.getJSON path, @request, (err, data, response) => @send data
 
+  @get '/redirect/': ->
+    @redirect "/#{(@session.prevID ? "")}"
+
   @get '/?:id?': ->
+    @session.prevID = (@params.id ? "")
     @render 'index', id: (@params.id ? ""), session: @session
 
   @view index: ->
@@ -139,11 +145,6 @@ require("zappa") port, ->
               else
                 a class:"signin", href: "/sessions/login", -> "Sign in with Twitter"
           div class:"social_buttons", ->
-            a href:"https://twitter.com/share", class:"twitter-share-button", "data-via":"hanachin_", "data-count":"vertical", ->
-              text "Tweet"
-            script charset: 'utf-8', ->
-              text "!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");"
-            text " "
             div class:"g-plusone", "data-size":"tall"
             text " "
             div
@@ -153,6 +154,11 @@ require("zappa") port, ->
               "data-width":"70"
               "data-show-faces":"true"
               "data-layout":"box_count"
+            text " "
+            a href:"https://twitter.com/share", class:"twitter-share-button", "data-via":"hanachin_", "data-count":"vertical", ->
+              text "Tweet"
+            script charset: 'utf-8', ->
+              text "!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");"
         div class: "content", ->
           @body
         div class:"top_background", ->
