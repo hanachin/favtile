@@ -274,7 +274,7 @@
                 favorited: true
               });
               return $.meow({
-                message: "failed to remove favorite."
+                message: "failed to remove favorite tweet."
               });
             }
           });
@@ -285,7 +285,7 @@
                 favorited: true
               });
               return $.meow({
-                title: "success to add favorite.",
+                title: "success to add favorite tweet.",
                 message: _this.item.text,
                 icon: _this.item.user.profile_image_url
               });
@@ -302,7 +302,7 @@
       } else {
         return $.meow({
           icon: "/favicon73x73.png",
-          message: "Please sign in to add or remove favorites."
+          message: "Please sign in to add or remove favorite tweets."
         });
       }
     };
@@ -371,7 +371,7 @@
       } else {
         return $.meow({
           icon: "/favicon73x73.png",
-          message: "Please sign in to retweet."
+          message: "Please sign in to retweet this tweet."
         });
       }
     };
@@ -461,7 +461,7 @@
             Tweet.create(fav);
           }
           if (favs.length === 0) {
-            return $(_this.favs_footer).append("There is no favorite tweets of " + _this.screen_name + ".");
+            return $(_this.favs_footer).append("There is no favorite tweet of " + _this.screen_name + ".");
           }
         });
       } else if (location.hash) {
@@ -475,7 +475,7 @@
             Tweet.create(t);
           }
           if (result.results.length === 0) {
-            return $(_this.favs_footer).append("end of favotes.");
+            return $(_this.favs_footer).append("There are no tweets about #" + _this.location.hash);
           }
         });
       } else {
@@ -542,7 +542,7 @@
             }
             return _this.loading = false;
           } else {
-            return $(_this.favs_footer).append("end of favotes.");
+            return $(_this.favs_footer).append("There are no more favorite tweets of " + _this.screen_name + ".");
           }
         });
       }

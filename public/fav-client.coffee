@@ -232,8 +232,8 @@ class FavtileApp extends Spine.Controller
       twapi (favs_url @screen_name), (favs) =>
         console.log "favs"
         for fav in favs
-          Tweet.create if
-        fav favs.length is 0 then $(@favs_footer).append "There is no favorite tweet of #{@screen_name}."
+          Tweet.create fav
+        if favs.length is 0 then $(@favs_footer).append "There is no favorite tweet of #{@screen_name}."
 
     else if location.hash
       $(@screen_name_input).val decodeURIComponent location.hash
