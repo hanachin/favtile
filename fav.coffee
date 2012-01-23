@@ -163,8 +163,9 @@ require("zappa") port, ->
         div class:"top_background", ->
           img src: "top_background.png", alt: "Enter your twitter ID"
         footer class: "global_footer", ->
-          text "Feedback:"
-          a href:"http://twitter.com/hanachin_", -> text "@hanachin_"
+          if @id is ""
+            text "Feedback:"
+            a href:"http://twitter.com/hanachin_", -> text "@hanachin_"
         script src: '/jquery-1.7.1.min.js', charset: 'utf-8'
         script src: '/jquery.tmpl.min.js', charset: 'utf-8'
         script src: '/jquery.bottom-1.0.js', charset: 'utf-8'
