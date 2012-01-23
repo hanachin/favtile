@@ -197,11 +197,8 @@ class Tweet extends Spine.Model
     "#{date} #{time}"
 
   constructor: (src) ->
-    console.log "before src"
     super src
-    console.log "after src"
     unless @user then @user = screen_name: @from_user, profile_image_url: @profile_image_url
-    console.log "cons"
 
 class FavtileApp extends Spine.Controller
   events:
@@ -302,10 +299,13 @@ class FavtileApp extends Spine.Controller
       $(@icon).attr src: user.profile_image_url
 
     $(@screen_name_input).val @screen_name
-    twapi (lookup_url @screen_name), (users) ->
-      user = users[0]
-      set_bg user
-      set_icon user
+    setTimeout (=>
+      console.log "foobar"
+      twapi (lookup_url @screen_name), (users) ->
+        user = users[0]
+        set_bg user
+        set_icon user
+    ), 500
 
 $ ->
   new FavtileApp(el: $("#favs"))

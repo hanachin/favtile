@@ -403,16 +403,13 @@
     };
 
     function Tweet(src) {
-      this.dateformat = __bind(this.dateformat, this);      console.log("before src");
-      Tweet.__super__.constructor.call(this, src);
-      console.log("after src");
+      this.dateformat = __bind(this.dateformat, this);      Tweet.__super__.constructor.call(this, src);
       if (!this.user) {
         this.user = {
           screen_name: this.from_user,
           profile_image_url: this.profile_image_url
         };
       }
-      console.log("cons");
     }
 
     return Tweet;
@@ -572,12 +569,15 @@
         });
       };
       $(this.screen_name_input).val(this.screen_name);
-      return twapi(lookup_url(this.screen_name), function(users) {
-        var user;
-        user = users[0];
-        set_bg(user);
-        return set_icon(user);
-      });
+      return setTimeout((function() {
+        console.log("foobar");
+        return twapi(lookup_url(_this.screen_name), function(users) {
+          var user;
+          user = users[0];
+          set_bg(user);
+          return set_icon(user);
+        });
+      }), 500);
     };
 
     return FavtileApp;
