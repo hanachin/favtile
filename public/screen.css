@@ -308,3 +308,7 @@ input.favtile_button, input.screen_name_input {
 .twitter-share-button {
     margin-top: 4px;
 }
+.favs_footer {
+    border-radius: 5px;
+    background: rgba(255,255, 255, 0.8);
+}
