@@ -121,7 +121,7 @@ require("zappa") port, ->
         meta content:'Favtile', property:'og:site_name'
         meta content:'Favtile', property:'og:title'
         meta content:'Favtile maximize your twitter favorite activity.', property:'og:description'
-        meta content:'http://favtile.com/?id=1', property:'og:url'
+        meta content:'http://favtile.com/', property:'og:url'
         meta content:'http://favtile.com/thumb.png', property:'og:image'
         meta content:'website', property:'og:type'
         meta content:'hanachin', property:'fb:admins'
