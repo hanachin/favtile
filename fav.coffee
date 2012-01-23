@@ -9,7 +9,6 @@ else
 
 require("zappa") port, ->
   @use 'static',
-    basicAuth:((u, p) -> u is 'hanachin' and p is 'zxcvbnm')
     'bodyParser'
     'cookieParser'
     session: { secret: "kwae3n2j2nbjsduzhua2" }
