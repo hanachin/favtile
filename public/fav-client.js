@@ -367,6 +367,8 @@
               });
             }
           });
+        } else {
+          return this.item.updateAttributes(this.item.retweeted);
         }
       } else {
         return $.meow({

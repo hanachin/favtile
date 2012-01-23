@@ -175,6 +175,8 @@ class Tweets extends Spine.Controller
           else
             @item.updateAttributes retweeted: false
             $.meow message: "failed to retweet."
+      else
+        @item.updateAttributes @item.retweeted
     else
       $.meow
         icon: "/favicon73x73.png"
