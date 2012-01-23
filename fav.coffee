@@ -125,7 +125,7 @@ require("zappa") port, ->
         meta content:'http://favtile.com/thumb.png', property:'og:image'
         meta content:'website', property:'og:type'
         meta content:'hanachin', property:'fb:admins'
-        title "Favtile"
+        title "#Favtile"
         link rel: 'stylesheet', href: '/screen.css'
         link rel: 'stylesheet', href: '/jquery.meow.css'
         link rel: 'stylesheet', href: '/fancybox/jquery.fancybox-1.3.4.css'
