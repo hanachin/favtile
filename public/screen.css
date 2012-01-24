@@ -308,7 +308,13 @@ input.favtile_button, input.screen_name_input {
 .twitter-share-button {
     margin-top: 4px;
 }
-.favs_footer {
-    border-radius: 5px;
-    background: rgba(255,255, 255, 0.8);
+.favs_footer p {
+    color: white;
+    text-shadow: 1px 1px 3px red;
+    width: 200px;
+    margin: 80px auto 0px auto;
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    behavior: url('PIE.htc');
 }

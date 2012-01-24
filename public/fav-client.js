@@ -460,7 +460,7 @@
             Tweet.create(fav);
           }
           if (favs.length === 0) {
-            return $(_this.favs_footer).append("There is no favorite tweet of " + _this.screen_name + ".");
+            return $(_this.favs_footer).append($("<p>").text("There is no favorite tweet of " + _this.screen_name + "."));
           }
         });
       } else if (location.hash) {
@@ -474,7 +474,7 @@
             Tweet.create(t);
           }
           if (result.results.length === 0) {
-            return $(_this.favs_footer).append("There are no tweets about #" + _this.location.hash);
+            return $(_this.favs_footer).append($("<p>").text("There are no tweets about #" + _this.location.hash));
           }
         });
       } else {
@@ -541,7 +541,7 @@
             }
             return _this.loading = false;
           } else {
-            return $(_this.favs_footer).append("There are no more favorite tweets of " + _this.screen_name + ".");
+            return $(_this.favs_footer).append($("<p>").text("There are no more favorite tweets of " + _this.screen_name + "."));
           }
         });
       }

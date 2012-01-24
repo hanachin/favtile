@@ -232,14 +232,14 @@ class FavtileApp extends Spine.Controller
         console.log "favs"
         for fav in favs
           Tweet.create fav
-        if favs.length is 0 then $(@favs_footer).append "There is no favorite tweet of #{@screen_name}."
+        if favs.length is 0 then $(@favs_footer).append $("<p>").text "There is no favorite tweet of #{@screen_name}."
 
     else if location.hash
       $(@screen_name_input).val decodeURIComponent location.hash
       twapi (search_url location.hash), (result) =>
         console.log result.results
         Tweet.create t for t in result.results
-        if result.results.length is 0 then $(@favs_footer).append "There are no tweets about ##{@location.hash}"
+        if result.results.length is 0 then $(@favs_footer).append $("<p>").text "There are no tweets about ##{@location.hash}"
     else
       $(".top_background").css display: "block"
 
@@ -280,7 +280,7 @@ class FavtileApp extends Spine.Controller
           Tweet.create fav for fav in favs
           @loading = false
         else
-          $(@favs_footer).append "There are no more favorite tweets of #{@screen_name}."
+          $(@favs_footer).append $("<p>").text "There are no more favorite tweets of #{@screen_name}."
 
 
   setSearchInformation: =>
