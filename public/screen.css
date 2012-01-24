@@ -230,7 +230,6 @@ input.favtile_button, input.screen_name_input {
 
 #error {
     color: white;
-    text-shadow: 1px 1px 3px red;
     width: 200px;
     margin: 80px auto 0px auto;
     background: rgb(0, 0, 0);
@@ -310,7 +309,6 @@ input.favtile_button, input.screen_name_input {
 }
 .favs_footer p {
     color: white;
-    text-shadow: 1px 1px 3px red;
     width: 200px;
     margin: 80px auto 0px auto;
     background: rgb(0, 0, 0);
