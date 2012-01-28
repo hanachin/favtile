@@ -1,10 +1,14 @@
 * インストール
   動作にはnodeとnpmが必要です。
   $ npm installで必要なモジュールが全て入るはずです。
+  Favの追加・削除等の機能を使用するためにはconfig/default.coffeeにあなたのTwitter APIのconsumer keyとconsumer secret keyを設定してください
 
 * 使用している技術
   サーバーサイドはzappa
   クライアントサイドはSpine.jsとjQueryとjQueryの各種プラグイン
+
+* ちょっと心残りなところ
+  Spine.jsをまだ奇麗に使えていない。fav.coffeeからテンプレートを分離出来ていない。テスト書いてない。
 
 * Favtileを作った理由
   TwitterはFavに最適化されていない
