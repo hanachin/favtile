@@ -14,5 +14,13 @@
     - [X] ユーザーのページへ飛ぶ
     - [X] ツイートのページへ飛ぶ(廃止
   - [X] fancy boxでメディアを出す
+* やること
+  - [ ] enter your twitter idだと分かりづらい。Twitter nameにしたほうがいいかも
+  - [ ] feedback手書き
+  - [ ] 背景どーする
+  - [ ] サイトのアイコン埋め込む
+    - [ ] open graph
+    - [ ] embededly?
 * 余力があれば
   - [ ] Chrome Extension
+
