@@ -1,11 +1,8 @@
 twitter = require "express-twitter"
 csrf = require "express-csrf"
+config = require('config')
 
 port = Number(process.env.PORT || 3000)
-baseURL = if process.env.NODE_ENV is "production"
-  "http://favtile.com"
-else
-  "http://localhost:3000"
 
 require("zappa") port, ->
   @use 'static',
@@ -14,9 +11,9 @@ require("zappa") port, ->
     session: { secret: "kwae3n2j2nbjsduzhua2" }
     csrf.check()
     twitter.middleware
-      consumerKey: "your consumer key"
-      consumerSecret: "your consumer secret"
-      baseURL: baseURL
+      consumerKey: config.twitter.consumerKey
+      consumerSecret: config.twitter.consumerSecret
+      baseURL: config.baseURL
       afterLogin: "/redirect/"
 
   @helper needLoggedIn: (callback) ->

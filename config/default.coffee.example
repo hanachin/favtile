@@ -1,0 +1,4 @@
+module.exports =
+  twitter:
+    consumerKey: "your consumer key"
+    consumerSecret: "your consumer secret key"
