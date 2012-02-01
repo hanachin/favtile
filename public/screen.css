@@ -316,3 +316,8 @@ input.favtile_button, input.screen_name_input {
     border-radius: 10px;
     behavior: url('PIE.htc');
 }
+
+.fb_edge_comment_widget {
+    top: 66px !important;
+    left: -270px !important;
+}
