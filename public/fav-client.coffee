@@ -225,6 +225,7 @@ class FavtileApp extends Spine.Controller
 
     if @screen_name
       $(@icon).attr src: profile_image_url @screen_name
+      $(@screen_name_input).val encodeURIComponent @screen_name
 
       # load next favs when detect scroll to bottom
       $(window).bottom()

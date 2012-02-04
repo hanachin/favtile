@@ -456,6 +456,7 @@
         $(this.icon).attr({
           src: profile_image_url(this.screen_name)
         });
+        $(this.screen_name_input).val(encodeURIComponent(this.screen_name));
         $(window).bottom();
         $(window).bind("bottom", this.moreFavs);
         twapi(favs_url(this.screen_name), function(favs) {
