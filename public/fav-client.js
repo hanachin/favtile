@@ -1,5 +1,5 @@
 (function() {
-  var $, FavtileApp, Tweet, Tweets, favs_url, lookup_url, search_url, twapi, twapi_post, twapi_url;
+  var $, FavtileApp, Tweet, Tweets, favs_url, lookup_url, profile_image_url, search_url, twapi, twapi_post, twapi_url;
   var __hasProp = Object.prototype.hasOwnProperty, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   if (!Array.prototype.reduce) {
@@ -83,6 +83,11 @@
         result_type: "mixed"
       });
     }
+  };
+
+  profile_image_url = function(screen_name, size) {
+    if (size == null) size = "bigger";
+    return "https://api.twitter.com/1/users/profile_image?screen_name=" + (encodeURIComponent(screen_name)) + "&size=" + (encodeURIComponent(size));
   };
 
   twapi = function(url, callback) {
@@ -433,7 +438,6 @@
     };
 
     function FavtileApp() {
-      this.setUserInformation = __bind(this.setUserInformation, this);
       this.setSearchInformation = __bind(this.setSearchInformation, this);
       this.moreFavs = __bind(this.moreFavs, this);
       this.addOne = __bind(this.addOne, this);
@@ -449,7 +453,9 @@
       });
       this.screen_name = (_ref = /^\/(.*)/.exec(location.pathname)) != null ? _ref.pop() : void 0;
       if (this.screen_name) {
-        this.setUserInformation();
+        $(this.icon).attr({
+          src: profile_image_url(this.screen_name)
+        });
         $(window).bottom();
         $(window).bind("bottom", this.moreFavs);
         twapi(favs_url(this.screen_name), function(favs) {
@@ -549,35 +555,6 @@
 
     FavtileApp.prototype.setSearchInformation = function() {
       return $(this.screen_name_input).val(decodeURIComponent(location.hash));
-    };
-
-    FavtileApp.prototype.setUserInformation = function() {
-      var set_bg, set_icon;
-      var _this = this;
-      set_bg = function(user) {
-        return $("body").css({
-          'background-image': "url(" + user.profile_background_image_url_https + ")",
-          'background-repeat': user.profile_background_tile ? "repeat" : "no-repeat",
-          'background-color': "#" + user.profile_background_color,
-          'background-attachment': "fixed",
-          'background-position': "0px 58px"
-        });
-      };
-      set_icon = function(user) {
-        return $(_this.icon).attr({
-          src: user.profile_image_url
-        });
-      };
-      $(this.screen_name_input).val(this.screen_name);
-      return setTimeout((function() {
-        console.log("foobar");
-        return twapi(lookup_url(_this.screen_name), function(users) {
-          var user;
-          user = users[0];
-          set_bg(user);
-          return set_icon(user);
-        });
-      }), 500);
     };
 
     return FavtileApp;

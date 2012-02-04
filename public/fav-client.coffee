@@ -45,6 +45,9 @@ search_url = (q, page = 1) ->
   else
     twapi_url "/search", q: q, rpp: 100, result_type: "mixed"
 
+profile_image_url = (screen_name, size = "bigger") ->
+  "https://api.twitter.com/1/users/profile_image?screen_name=#{encodeURIComponent screen_name}&size=#{encodeURIComponent size}"
+
 twapi = (url, callback) ->
   ($.getJSON url, (json) ->
     console.log json
@@ -221,7 +224,7 @@ class FavtileApp extends Spine.Controller
     @screen_name = /^\/(.*)/.exec(location.pathname)?.pop()
 
     if @screen_name
-      @setUserInformation()
+      $(@icon).attr src: profile_image_url @screen_name
 
       # load next favs when detect scroll to bottom
       $(window).bottom()
@@ -285,27 +288,6 @@ class FavtileApp extends Spine.Controller
 
   setSearchInformation: =>
     $(@screen_name_input).val decodeURIComponent location.hash
-
-  setUserInformation: =>
-    set_bg = (user) =>
-      $("body").css
-        'background-image': "url(#{user.profile_background_image_url_https})"
-        'background-repeat': if user.profile_background_tile then "repeat" else "no-repeat"
-        'background-color': "##{user.profile_background_color}"
-        'background-attachment': "fixed"
-        'background-position': "0px 58px"
-
-    set_icon = (user) =>
-      $(@icon).attr src: user.profile_image_url
-
-    $(@screen_name_input).val @screen_name
-    setTimeout (=>
-      console.log "foobar"
-      twapi (lookup_url @screen_name), (users) ->
-        user = users[0]
-        set_bg user
-        set_icon user
-    ), 500
 
 $ ->
   new FavtileApp(el: $("#favs"))
