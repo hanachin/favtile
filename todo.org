@@ -21,6 +21,9 @@
   - [ ] サイトのアイコン埋め込む
     - [ ] open graph
     - [ ] embededly?
+  - [ ] 英語のREADME
+  - [ ] スルーされないRemarkable
+  - [ ] enchant.coffeeのようなインパクトのある文章
 * 余力があれば
   - [ ] Chrome Extension
 
