@@ -174,7 +174,7 @@ require("zappa") port, ->
         script src: '/fav-client.js', charset: 'utf-8'
 
         coffeescript ->
-          window._gaq = _gaq or []
+          window._gaq = window._gaq or []
           window._gaq.push [ "_setAccount", "UA-28457578-1" ]
           window._gaq.push [ "_trackPageview" ]
           do ->
