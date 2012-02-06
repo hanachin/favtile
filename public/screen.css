@@ -12,7 +12,7 @@ img {
 body {
     margin: 0px;
     padding: 0px;
-    background: #222;
+    background: url(/back.gif);
 }
 
 .global_header {
@@ -56,8 +56,8 @@ div.item {
     word-wrap: break-word;
     width: 210px;
     background: rgb(255, 255, 255);
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0px 0px 3px #fff;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 0px 3px black;
     font-size: 14px;
     behavior: url('PIE.htc');
 }

@@ -488,9 +488,6 @@
         $(".top_background").css({
           display: "block"
         });
-        $("body").css({
-          background: "white"
-        });
       }
       $(window).bind('hashchange', function() {
         console.log("hash change");

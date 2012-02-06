@@ -246,7 +246,6 @@ class FavtileApp extends Spine.Controller
         if result.results.length is 0 then $(@favs_footer).append $("<p>").text "There are no tweets about ##{@location.hash}"
     else
       $(".top_background").css display: "block"
-      $("body").css background: "white"
 
     $(window).bind 'hashchange', =>
       console.log "hash change"
