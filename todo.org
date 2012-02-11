@@ -14,23 +14,25 @@
     - [X] ユーザーのページへ飛ぶ
     - [X] ツイートのページへ飛ぶ(廃止
   - [X] fancy boxでメディアを出す
-* やること
+* やること [2/7]
   - [ ] enter your twitter idだと分かりづらい。Twitter nameにしたほうがいいかも
   - [ ] feedback手書き
   - [X] 背景どーする
         ユーザーページの背景を、ユーザーの情報を使わず、黒にしたけど
         トップページの白から変化が激しすぎる。
         なので、白系のコルク・大理石風の見た目にしたい
-  - [ ] サイトのアイコン埋め込む
-    - [ ] open graph
-    - [ ] embededly?
+  - [X] サイトのアイコン埋め込む
+    - [X] open graph
+          OpenGraphでデータとって来てpictureが設定されてるURLあまり無いかも
+    - [X] embededly?
   - [ ] 英語のREADME
   - [ ] スルーされないRemarkableな文章
   - [ ] enchant.coffeeのようなインパクトのある文章
-  - [ ] マウスオーバーした感
-  - [ ] マウスオーバーして数秒まつとFavtileに飛ぶ
-* 余力があれば
-  - [ ] Chrome Extension
+
+* Chrome [3/3]
+  - [X] Chrome Extension
         TwitterにKlout Scoreと同じ場所に表示するように作った。
         実は結構簡単に作れる事がわかった。
         公開するまでにアイコンとかを作ってもらいたい。
+  - [X] マウスオーバーした感
+  - [X] マウスオーバーして数秒まつとFavtileに飛ぶ(保留)
