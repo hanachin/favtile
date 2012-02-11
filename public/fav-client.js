@@ -147,7 +147,7 @@
     }
 
     Tweets.prototype.decorate = function(item) {
-      var a, e, el, entities, img, m, media, pos, sizes, sub, t, text, v, values, _i, _j, _k, _len, _len2, _len3;
+      var a, e, el, ent, entities, img, m, media, pos, sizes, sub, t, text, u, urls, uxnu_url, v, values, _i, _j, _k, _l, _len, _len2, _len3, _len4, _ref;
       text = item.text, entities = item.entities;
       for (t in entities) {
         if (!__hasProp.call(entities, t)) continue;
@@ -178,7 +178,7 @@
         el.append(text.substr(pos, e.indices[0] - pos));
         pos = e.indices[1];
         sub = text.substr(e.indices[0], e.indices[1] - e.indices[0]);
-        el.append((function() {
+        ent = (function() {
           var _ref, _ref2, _ref3, _ref4;
           switch (e.type) {
             case "urls":
@@ -209,7 +209,13 @@
               console.log("unknown entity type", e);
               return sub;
           }
-        })());
+        })();
+        el.append($(ent).embedly({
+          key: '3e44f228543a11e184354040d3dc5c07',
+          maxWidth: 200,
+          words: 0,
+          chars: 0
+        }));
       }
       el.append(text.substr(pos));
       media = (function() {
@@ -235,6 +241,47 @@
           src: "" + m.media_url + ":thumb"
         }).css(sizes);
         el.append(a.append(img));
+      }
+      urls = (function() {
+        var _l, _len4, _results;
+        _results = [];
+        for (_l = 0, _len4 = entities.length; _l < _len4; _l++) {
+          e = entities[_l];
+          if (e.type === "urls") _results.push(e);
+        }
+        return _results;
+      })();
+      for (_l = 0, _len4 = urls.length; _l < _len4; _l++) {
+        u = urls[_l];
+        uxnu_url = "http://ux.nu/hugeurl?format=jsonp&callback=?&url=" + ((_ref = u.expanded_url) != null ? _ref : u.url);
+        $.getJSON(uxnu_url, function(json) {
+          var graph_url;
+          graph_url = "https://graph.facebook.com/?callback=?&ids=" + (json.exp || json.orig);
+          return $.getJSON(graph_url, function(graph) {
+            var g, url, _ref2, _results;
+            console.log("graph", graph);
+            if (!graph.error) {
+              _results = [];
+              for (url in graph) {
+                if (!__hasProp.call(graph, url)) continue;
+                g = graph[url];
+                if (g.picture) {
+                  a = $("<a>").attr({
+                    href: (_ref2 = u.expanded_url) != null ? _ref2 : u.url
+                  });
+                  _results.push(img = $("<img>").attr({
+                    src: g.picture,
+                    width: 100,
+                    height: 100
+                  }));
+                } else {
+                  _results.push(void 0);
+                }
+              }
+              return _results;
+            }
+          });
+        });
       }
       return el;
     };

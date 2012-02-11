@@ -184,6 +184,7 @@ require("zappa") port, ->
         script src: '/spine.js', charset: 'utf-8'
         script id: 'facebook-jssdk', src:'http://connect.facebook.net/ja_JP/all.js#xfbml=1'
         script src: '/fav-client.js', charset: 'utf-8'
+        script src: "http://scripts.embed.ly/jquery.embedly.min.js"
 
         coffeescript ->
           window._gaq = window._gaq or []

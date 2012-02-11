@@ -346,3 +346,7 @@ input.favtile_button, input.screen_name_input {
     top: 66px !important;
     left: -270px !important;
 }
+
+.media, .embed .description {
+    display:none !important;
+}

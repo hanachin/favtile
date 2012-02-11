@@ -91,7 +91,8 @@ class Tweets extends Spine.Controller
       el.append text.substr(pos, e.indices[0] - pos)
       pos = e.indices[1]
       sub = text.substr(e.indices[0], e.indices[1] - e.indices[0])
-      el.append switch e.type
+
+      ent = switch e.type
         when "urls" then $("<a>").attr(class: "urls", target: "_blank", href: e.expanded_url ? e.url).text e.display_url ? e.url
         when "user_mentions" then $("<a>").attr(class: "user_mentions", target: "_self", href: "/#{encodeURIComponent e.screen_name}").text sub
         when "hashtags" then $("<a>").attr(class: "hashtags", target: "_self", href: "/##{encodeURIComponent e.text}").text sub
@@ -99,6 +100,12 @@ class Tweets extends Spine.Controller
         else
           console.log "unknown entity type", e
           sub
+      el.append $(ent).embedly({
+        key:'3e44f228543a11e184354040d3dc5c07'
+        maxWidth:200
+        words:0
+        chars:0
+      })
     el.append text.substr(pos)
 
     media = (e for e in entities when e.type is "media")
@@ -107,6 +114,21 @@ class Tweets extends Spine.Controller
       a = $("<a>").attr(href: "#{m.media_url}:large").fancybox()
       img = $("<img>").attr(class: "media", src: "#{m.media_url}:thumb").css(sizes)
       el.append a.append img
+
+    urls = (e for e in entities when e.type is "urls")
+    for u in urls
+      uxnu_url = "http://ux.nu/hugeurl?format=jsonp&callback=?&url=#{u.expanded_url ? u.url}"
+      $.getJSON uxnu_url, (json) ->
+        graph_url = "https://graph.facebook.com/?callback=?&ids=#{json.exp or json.orig}"
+        $.getJSON graph_url, (graph) ->
+          console.log "graph", graph
+          if not graph.error
+            for own url, g of graph
+              if g.picture
+                a = $("<a>").attr(href: u.expanded_url ? u.url)
+                img = $("<img>").attr(src:g.picture, width: 100, height:100)
+                # el.append $("<br/>")
+                # el.append a.append img
     el
 
   twLoadingFav: =>
