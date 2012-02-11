@@ -1,0 +1,14 @@
+{
+  "name": "Jump to Favtile",
+  "version": "1.0",
+  "description": "Favtile extension",
+  "content_scripts":[
+    {
+      "matches":["http://twitter.com/*", "https://twitter.com/*"],
+      "js":["jquery.js", "build/favtile.js"]
+    }
+  ],
+  "permissions": [
+    "tabs"
+  ]
+}
