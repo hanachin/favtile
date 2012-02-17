@@ -120,7 +120,13 @@ require("zappa") port, ->
         meta charset: "utf-8"
         meta content:'Favtile', property:'og:site_name'
         meta content:'Favtile', property:'og:title'
-        meta content:'Favtile maximize your twitter favorite activity.', property:'og:description'
+        meta
+          content:"""
+            Favtile displays your favorited tweets look like tile.
+            You can see favorited tweets of others by click the icon of others.
+            Also you can add favorite tweet easy by fav button on the toolbar.
+          """
+          property:'og:description'
         meta content:'http://favtile.com/', property:'og:url'
         meta content:'http://favtile.com/thumb.png', property:'og:image'
         meta content:'website', property:'og:type'
