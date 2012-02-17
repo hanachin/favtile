@@ -86,7 +86,7 @@
   };
 
   profile_image_url = function(screen_name, size) {
-    if (size == null) size = "bigger";
+    if (size == null) size = "normal";
     return "https://api.twitter.com/1/users/profile_image?screen_name=" + (encodeURIComponent(screen_name)) + "&size=" + (encodeURIComponent(size));
   };
 

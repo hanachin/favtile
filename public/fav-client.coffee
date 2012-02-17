@@ -45,7 +45,7 @@ search_url = (q, page = 1) ->
   else
     twapi_url "/search", q: q, rpp: 100, result_type: "mixed"
 
-profile_image_url = (screen_name, size = "bigger") ->
+profile_image_url = (screen_name, size = "normal") ->
   "https://api.twitter.com/1/users/profile_image?screen_name=#{encodeURIComponent screen_name}&size=#{encodeURIComponent size}"
 
 twapi = (url, callback) ->
