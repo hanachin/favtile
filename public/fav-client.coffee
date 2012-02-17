@@ -106,7 +106,7 @@ class Tweets extends Spine.Controller
         words:0
         chars:0
       }).bind('embedly-oembed', ->
-        $(".items").masonry('reload')
+        setTimeout (-> $(".items").masonry('reload')), 1000
       )
     el.append text.substr(pos)
     el

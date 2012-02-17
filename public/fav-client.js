@@ -216,7 +216,9 @@
           words: 0,
           chars: 0
         }).bind('embedly-oembed', function() {
-          return $(".items").masonry('reload');
+          return setTimeout((function() {
+            return $(".items").masonry('reload');
+          }), 1000);
         }));
       }
       el.append(text.substr(pos));
