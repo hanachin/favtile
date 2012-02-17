@@ -105,30 +105,10 @@ class Tweets extends Spine.Controller
         maxWidth:200
         words:0
         chars:0
-      })
+      }).bind('embedly-oembed', ->
+        $(".items").masonry('reload')
+      )
     el.append text.substr(pos)
-
-    media = (e for e in entities when e.type is "media")
-    for m in media
-      sizes = width: m.sizes.thumb.w, height: m.sizes.thumb.h
-      a = $("<a>").attr(href: "#{m.media_url}:large").fancybox()
-      img = $("<img>").attr(class: "media", src: "#{m.media_url}:thumb").css(sizes)
-      el.append a.append img
-
-    urls = (e for e in entities when e.type is "urls")
-    for u in urls
-      uxnu_url = "http://ux.nu/hugeurl?format=jsonp&callback=?&url=#{u.expanded_url ? u.url}"
-      $.getJSON uxnu_url, (json) ->
-        graph_url = "https://graph.facebook.com/?callback=?&ids=#{json.exp or json.orig}"
-        $.getJSON graph_url, (graph) ->
-          console.log "graph", graph
-          if not graph.error
-            for own url, g of graph
-              if g.picture
-                a = $("<a>").attr(href: u.expanded_url ? u.url)
-                img = $("<img>").attr(src:g.picture, width: 100, height:100)
-                # el.append $("<br/>")
-                # el.append a.append img
     el
 
   twLoadingFav: =>

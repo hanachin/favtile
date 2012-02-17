@@ -347,6 +347,6 @@ input.favtile_button, input.screen_name_input {
     left: -270px !important;
 }
 
-.media, .embed .description {
+.media, .embed .description, .embed .provider {
     display:none !important;
 }
