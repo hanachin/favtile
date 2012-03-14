@@ -200,3 +200,11 @@ require("zappa") port, ->
           else
             text "twitter = false;"
           text "csrf=\"#{@csrf}\";"
+        a title:"Real Time Analytics", href:"http://getclicky.com/66555523", ->
+          img alt:"Real Time Analytics", src:"//static.getclicky.com/media/links/badge.gif", border:"0"
+          script src:"//static.getclicky.com/js", type:"text/javascript"
+          script type:"text/javascript", ->
+            text "try{ clicky.init(66555523); }catch(e){}"
+        noscript ->
+          p ->
+            img alt:"Clicky", width:"1", height:"1", src:"//in.getclicky.com/66555523ns.gif"
