@@ -169,7 +169,7 @@ div.item footer.item_footer {
 
 input.screen_name_input {
     position: fixed;
-    left: 63px;
+    left: 93px;
     top: 25px;
     width: 100px;
     font-size: 12px;
@@ -177,7 +177,7 @@ input.screen_name_input {
 
 input.favtile_button {
     position: fixed;
-    left: 180px;
+    left: 210px;
     top: 26px;
     width: 80px;
 }
@@ -190,6 +190,27 @@ input.favtile_button:hover {
 input.favtile_button, input.screen_name_input {
     padding: 5px;
     z-index: 105;
+}
+
+.atmark {
+    color: #ffffff;
+    position:fixed;
+    left: 63px;
+    top: 25px;
+    font-size: 22px;
+    z-index: 20;
+}
+
+.signin_with_twitter {
+    margin-top: 30px;
+    margin-left: 30px;
+    width:150px;
+    /* margin-left: auto; */
+    /* margin-right: auto; */
+}
+
+.screen_capture {
+    width: 100%;
 }
 
 .favtile_button {
@@ -277,6 +298,9 @@ input.favtile_button, input.screen_name_input {
     /* background-color: rgba(255, 255, 255, 0.8), rgba(0,0,0,0); */
     /* background-image: url('/top_background.png'), url('/screen01.png'); */
     /* background-position: left top, right top; */
+    width: 62%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .need-signin {

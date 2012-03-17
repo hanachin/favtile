@@ -65,7 +65,8 @@ require("zappa") port, ->
       twitter.getJSON path, @request, (err, data, response) => @send data
 
   @get '/redirect/': ->
-    @redirect "/#{(@session.prevID ? "")}"
+    @redirect "/#{@session?.twitter?.name}"
+    # @redirect "/#{(@session.prevID ? "")}"
 
   @get '/?:id?': ->
     @session.prevID = (@params.id ? "")
@@ -102,6 +103,8 @@ require("zappa") port, ->
     div id: "favs", ->
       header ->
         img class:"icon", src:"/favicon73x73.png", alt:"user icon"
+        div class:"atmark", ->
+          text "@"
         form ->
           input class:"screen_name_input", type: 'text'
           input class:"favtile_button", type: 'submit', value: "favtile!"
@@ -158,7 +161,16 @@ require("zappa") port, ->
         div class: "content", ->
           @body
         div class:"top_background", ->
-          img src: "top_background.png", alt: "Enter your twitter ID"
+          p ->
+            text "Favtile displays your favorite tweets like Tile."
+            br ->
+            text "Favtile is mix word of Favorite and Tile."
+            br ->
+            text "You can play movies, and see the pictures, play music, all through Favtile!"
+          div class:"signin_with_twitter", ->
+            a href:"/sessions/login", ->
+              img src:"sign-in-with-twitter-l.png", alt:"sign in with twitter"
+          img class:"screen_capture", src: "favtile_screen.png", alt: "Favtile Screenshot"
         footer class: "global_footer", ->
           if @id is ""
             text "Feedback:"
