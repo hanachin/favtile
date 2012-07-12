@@ -100,6 +100,9 @@ require("zappa") port, ->
               a href: "http://twitter.com/${user.screen_name}", target:"_blank", ->
                 img src:"/user.png", alt:"Jump to twitter user page"
                 span class:"user", -> "user"
+            text " | "
+            a href: "http://twitter.com/${user.screen_name}/status/${id_str}", ->
+              text "... "
     div id: "favs", ->
       header ->
         img class:"icon", src:"/favicon73x73.png", alt:"user icon"
